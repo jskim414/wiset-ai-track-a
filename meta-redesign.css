@@ -1,0 +1,348 @@
+/* Shared visual system for the Imagination AI August workshop handouts. */
+@font-face {
+  font-family: "Paperozi";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Paperozi";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Paperozi";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --bg: #ffffff;
+  --fg: #101214;
+  --muted: #59616b;
+  --line: #e5e7ea;
+  --accent: #0143b5;
+  --accent-soft: #edf4ff;
+  --cta: #101214;
+  --code-bg: #101214;
+  --code-fg: #f7f8fa;
+  --ok: #207a4b;
+  --ok-soft: #ebf7ef;
+  --warn: #8d4c17;
+  --warn-soft: #fff4df;
+  --surface-soft: #f5f6f7;
+  --ink-deep: #101214;
+  --radius-card: 24px;
+  --radius-large: 32px;
+}
+
+* { box-sizing: border-box; }
+
+html { background: var(--bg); }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Paperozi", "Malgun Gothic", "맑은 고딕", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.62;
+  letter-spacing: -0.16px;
+}
+
+.wrap {
+  max-width: 1360px;
+  gap: 48px;
+  padding: 0 40px;
+}
+
+main {
+  padding: 72px 0 144px;
+}
+
+h1, h2, h3 {
+  color: var(--ink-deep);
+  font-feature-settings: "ss01", "ss02";
+  letter-spacing: -0.04em;
+}
+
+h1 {
+  max-width: 960px;
+  margin: 2.6em 0 .72em;
+  padding: 0 0 .48em;
+  border-bottom: 2px solid var(--ink-deep);
+  font-size: clamp(2rem, 3.15vw, 3rem);
+  font-weight: 500;
+  line-height: 1.17;
+}
+
+h1:first-of-type {
+  margin-top: 0;
+  border-bottom: 0;
+  padding-bottom: .08em;
+  font-size: clamp(2.5rem, 4.4vw, 4rem);
+  line-height: 1.16;
+}
+
+h2 {
+  margin: 2.65em 0 .76em;
+  font-size: clamp(1.55rem, 2.25vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.28;
+}
+
+h3 {
+  margin: 1.75em 0 .58em;
+  font-size: clamp(1.18rem, 1.5vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1.32;
+}
+
+p { max-width: 900px; margin: 1em 0; }
+
+strong { color: var(--ink-deep); font-weight: 700; }
+
+em { font-style: normal; color: #3e4751; }
+
+a { color: var(--accent); font-weight: 700; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+hr {
+  margin: 4.5em 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+ul, ol { max-width: 900px; padding-left: 1.35em; }
+li { margin: .45em 0; padding-left: .1em; }
+
+blockquote {
+  max-width: 960px;
+  margin: 1.65em 0;
+  padding: 1.5em 1.75em;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-left: 0;
+  border-radius: var(--radius-card);
+  color: var(--fg);
+}
+
+blockquote::before {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 4px;
+  margin-bottom: 18px;
+  border-radius: 100px;
+  background: var(--ink-deep);
+}
+
+blockquote p:first-of-type, blockquote h3:first-child { margin-top: 0; }
+blockquote p:last-child { margin-bottom: 0; }
+blockquote h3 { color: var(--ink-deep); }
+
+pre {
+  max-width: 960px;
+  margin: 1.5em 0;
+  padding: 1.65em 1.8em;
+  border: 0;
+  border-radius: var(--radius-card);
+  background: var(--code-bg);
+  box-shadow: none;
+  color: var(--code-fg);
+  font-family: "D2Coding", "Cascadia Mono", Consolas, monospace;
+  font-size: .94em;
+  line-height: 1.7;
+}
+
+pre code { font-family: inherit; }
+
+:not(pre) > code {
+  padding: .17em .5em;
+  border-radius: 6px;
+  background: #f0f1f2;
+  color: #252b31;
+  font-family: "D2Coding", "Cascadia Mono", Consolas, monospace;
+  font-size: .86em;
+}
+
+.copybtn {
+  top: 16px;
+  right: 16px;
+  min-height: 34px;
+  padding: 7px 13px;
+  border: 1px solid rgba(255,255,255,.42);
+  border-radius: 100px;
+  background: transparent;
+  color: #fff;
+  font-family: "Paperozi", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+}
+.copybtn:hover { background: transparent; }
+.copybtn.done { background: var(--ok); border-color: var(--ok); }
+
+table {
+  max-width: 1040px;
+  margin: 1.8em 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  font-size: .91em;
+}
+
+th, td {
+  padding: .9em 1em;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--fg);
+  vertical-align: top;
+}
+
+th {
+  background: var(--surface-soft);
+  color: var(--ink-deep);
+  font-weight: 700;
+}
+
+tr:last-child td { border-bottom: 0; }
+tr:nth-child(even) td { background: #fafafa; }
+
+nav.toc {
+  width: 256px;
+  flex: 0 0 256px;
+  top: 28px;
+  max-height: calc(100vh - 56px);
+  margin: 28px 0;
+  padding: 20px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  font-size: 13px;
+  line-height: 1.38;
+}
+
+nav.toc .toctitle {
+  margin: 0 0 12px;
+  color: var(--ink-deep);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+nav.toc ul, nav.toc ul ul { padding-left: 0; border: 0; }
+nav.toc li { margin: 2px 0; padding: 0; }
+nav.toc ul ul { margin: 3px 0 6px 11px; padding-left: 9px; border-left: 1px solid var(--line); }
+
+nav.toc a {
+  display: block;
+  padding: 7px 9px;
+  border-radius: 10px;
+  color: var(--muted);
+  font-weight: 400;
+  line-height: 1.35;
+  text-decoration: none;
+}
+nav.toc a:hover { background: transparent; color: var(--muted); }
+
+#bar {
+  height: 4px;
+  background: var(--ink-deep);
+}
+
+@media (max-width: 1000px) {
+  body { font-size: 16px; }
+  .wrap { display: block; padding: 0 28px; }
+  main { padding-top: 48px; }
+  nav.toc { display: none; }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 15px; line-height: 1.6; }
+  .wrap { padding: 0 18px; }
+  main { padding: 36px 0 80px; }
+  h1:first-of-type { font-size: 2.25rem; }
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.42rem; }
+  h3 { font-size: 1.13rem; }
+  hr { margin: 3.25em 0; }
+  blockquote, pre { margin: 1.25em 0; padding: 1.3em; border-radius: 16px; }
+  pre { font-size: .85em; }
+  table { display: block; max-width: 100%; overflow-x: auto; border-radius: 16px; font-size: .84em; }
+  th, td { min-width: 115px; padding: .78em .85em; }
+  .copybtn { top: 12px; right: 12px; min-height: 40px; }
+}
+
+@media print {
+  body { color: #101214; font-size: 11pt; }
+  .wrap { display: block; max-width: none; padding: 0; }
+  main { padding: 0; }
+  nav.toc, .copybtn, #bar { display: none; }
+  h1 { page-break-before: always; }
+  h1:first-of-type { page-break-before: avoid; }
+  pre { border: 1px solid #c7cbd0; background: #f5f6f7; color: #101214; }
+}
+
+/* Pandoc-generated long-form documents use the same visual system without a side navigation. */
+body.meta-document {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 72px 56px 144px;
+  background: var(--bg);
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+body.meta-document header {
+  max-width: 960px;
+  margin: 0 0 64px;
+  padding: 0 0 32px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+body.meta-document header h1,
+body.meta-document > h1:first-of-type {
+  margin-top: 0;
+}
+
+body.meta-document #TOC {
+  max-width: 960px;
+  margin: 0 0 56px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface-soft);
+}
+
+body.meta-document #TOC > ul { margin: 0; }
+body.meta-document #TOC li { list-style: none; }
+body.meta-document #TOC ul ul { margin: 4px 0 4px 14px; padding-left: 12px; border-left: 1px solid var(--line); }
+body.meta-document #TOC a { color: var(--muted); font-weight: 400; text-decoration: none; }
+
+body.meta-document input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0 9px 0 0;
+  vertical-align: -3px;
+  accent-color: var(--ink-deep);
+}
+
+body.meta-document .task-list { padding-left: 0; }
+body.meta-document .task-list li { list-style: none; }
+
+@media (max-width: 640px) {
+  body.meta-document { padding: 40px 20px 88px; }
+  body.meta-document header { margin-bottom: 40px; }
+  body.meta-document #TOC { margin-bottom: 40px; padding: 18px; border-radius: 16px; }
+}
+
+@media print {
+  body.meta-document { max-width: none; margin: 0; padding: 0; }
+  body.meta-document #TOC { background: transparent; }
+}

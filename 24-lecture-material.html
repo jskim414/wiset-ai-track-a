@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>24차시 · Day 9</title>
+<style>
+:root{
+  --bg:#ffffff; --fg:#1a1a2e; --muted:#5b6474; --line:#e3e6ec;
+  --accent:#4A90D9; --accent-soft:#eaf2fb;
+  --cta:#F5A623; --code-bg:#1a1a2e; --code-fg:#e8ecf4;
+  --ok:#1f8a4c; --ok-soft:#e8f6ee; --warn:#b3541e; --warn-soft:#fdf1e6;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font-family:"Pretendard","Pretendard Variable","Malgun Gothic","맑은 고딕",
+              -apple-system,"Segoe UI",system-ui,sans-serif;
+  font-size:19px; line-height:1.75; word-break:keep-all;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px;display:flex;gap:36px}
+main{flex:1;min-width:0;padding:48px 0 140px}
+h1,h2,h3{line-height:1.3;word-break:keep-all}
+h1{
+  font-size:2.15em;margin:2.4em 0 .5em;padding-bottom:.35em;
+  border-bottom:4px solid var(--accent);
+}
+h1:first-of-type{margin-top:.2em}
+h2{font-size:1.5em;margin:2em 0 .6em;color:#22304a}
+h3{font-size:1.16em;margin:1.6em 0 .4em;color:#33405c}
+p{margin:.85em 0}
+hr{border:0;border-top:1px solid var(--line);margin:2.6em 0}
+a{color:var(--accent)}
+strong{font-weight:700}
+ul,ol{padding-left:1.5em}
+li{margin:.35em 0}
+
+/* 인용 = 팁/강조 */
+blockquote{
+  margin:1.4em 0; padding:1em 1.3em;
+  background:var(--accent-soft); border-left:5px solid var(--accent);
+  border-radius:0 10px 10px 0; color:#233;
+}
+blockquote p{margin:.4em 0}
+blockquote h3{margin:.2em 0;font-size:1.25em;color:#123}
+
+/* 코드 */
+pre{
+  position:relative; background:var(--code-bg); color:var(--code-fg);
+  padding:1.15em 1.3em; border-radius:12px; overflow-x:auto;
+  font-size:1.02em; line-height:1.65; margin:1.1em 0;
+  box-shadow:0 2px 14px rgba(26,26,46,.16);
+}
+pre code{
+  font-family:"D2Coding","Cascadia Mono","Consolas","Malgun Gothic",monospace;
+  white-space:pre-wrap; word-break:break-word;
+}
+:not(pre)>code{
+  background:#f1f3f7; color:#1a2b45; padding:.15em .45em;
+  border-radius:6px; font-size:.94em;
+  font-family:"D2Coding","Consolas",monospace;
+}
+.copybtn{
+  position:absolute; top:9px; right:10px;
+  background:rgba(255,255,255,.13); color:#fff; border:1px solid rgba(255,255,255,.28);
+  border-radius:7px; padding:5px 12px; font-size:.72em; cursor:pointer;
+  font-family:inherit; letter-spacing:.02em;
+}
+.copybtn:hover{background:rgba(255,255,255,.26)}
+.copybtn.done{background:var(--ok);border-color:var(--ok)}
+
+/* 표 */
+table{border-collapse:collapse;width:100%;margin:1.3em 0;font-size:.97em}
+th,td{border:1px solid var(--line);padding:.6em .8em;text-align:left;vertical-align:top}
+th{background:#f5f7fa;font-weight:700}
+tr:nth-child(even) td{background:#fafbfd}
+
+/* 목차 */
+nav.toc{
+  width:250px;flex:0 0 250px;position:sticky;top:0;align-self:flex-start;
+  max-height:100vh;overflow-y:auto;padding:48px 0 60px;font-size:.86em;
+}
+nav.toc .toctitle{font-weight:700;color:var(--muted);letter-spacing:.06em;margin-bottom:.7em}
+nav.toc ul{list-style:none;padding-left:0;margin:0;border-left:2px solid var(--line)}
+nav.toc ul ul{padding-left:.85em;border:0}
+nav.toc li{margin:0}
+nav.toc a{display:block;padding:.34em .9em;color:var(--muted);text-decoration:none;border-radius:0 6px 6px 0}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+
+/* 진행 바 */
+#bar{position:fixed;top:0;left:0;height:4px;background:var(--cta);width:0;z-index:99}
+
+@media (max-width:1000px){
+  nav.toc{display:none}
+  body{font-size:17px}
+  .wrap{padding:0 18px}
+}
+@media print{
+  nav.toc,.copybtn,#bar{display:none}
+  body{font-size:11pt}
+  pre{background:#f4f5f8;color:#111;box-shadow:none;border:1px solid #ccc}
+  h1{page-break-before:always}
+  h1:first-of-type{page-break-before:avoid}
+}
+</style>
+<link rel="stylesheet" href="meta-redesign.css">
+</head>
+<body>
+<div id="bar"></div>
+<div class="wrap">
+<main>
+<h1 id="24-day-9">24차시 · Day 9</h1>
+<h2 id="9-5">그룹 발표회 · 수료 — 「9일의 기록을 5분에 담다」</h2>
+<blockquote>
+<p><strong>오늘 할 일 — 딱 하나</strong><br />
+<strong>9일 동안 만든 것을 5분에 담아 발표하고, 동료 24명의 사례를 배워 간다.</strong></p>
+</blockquote>
+<hr />
+<h2 id="_1">어제 질문부터 회수합니다</h2>
+<blockquote>
+<p>🤔 <em>"발표 첫 30초, 첫 문장을 뭐라고 시작하시겠습니까?"</em></p>
+</blockquote>
+<p>오늘 <strong>그 문장으로 시작합니다.</strong> 연습하셨던 그대로 하시면 됩니다.</p>
+<p>그리고 오늘은 하나 더 —</p>
+<blockquote>
+<h3 id="_2"><strong>오늘 가장 많이 배워 가는 사람은 발표자가 아니라, 메모하며 듣는 사람입니다.</strong></h3>
+<p>여러분 앞에서 <strong>서로 다른 도메인의 자동화 사례 25개</strong>가 지나갑니다.<br />
+이런 사례집은 돈 주고도 못 삽니다. 들으면서 훔치세요. 그러라고 있는 자리입니다.</p>
+</blockquote>
+<hr />
+<h2 id="3">그림 3장 — 최종판</h2>
+<p>3주 내내 본 그 세 장, 마지막 버전입니다.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>첫날</th>
+<th><strong>오늘</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>① 3자 분업</strong></td>
+<td>위임 설계는 "강사 + 여러분"</td>
+<td><strong>위임 설계도 여러분</strong> — 강사 칸이 비워졌습니다. 이제 혼자 돌아가는 구조입니다</td>
+</tr>
+<tr>
+<td><strong>② 에이전트</strong></td>
+<td>"직접 일하는 직원"이라는 비유</td>
+<td><strong>여러분이 실제로 부린 직원들</strong> — 점검·정제·예측·감시·문서화 에이전트</td>
+</tr>
+<tr>
+<td><strong>③ IPO</strong></td>
+<td>업무를 세 토막으로 쪼개는 연습</td>
+<td><strong>I</strong> 9일의 기록 → <strong>P</strong> 오늘 발표 → <strong>O</strong> 재취업 무기 3종 (사례집 · 링크 · 발표)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_3">오늘의 흐름</h2>
+<table>
+<thead>
+<tr>
+<th>시간</th>
+<th>구간</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1시간</td>
+<td><strong>준비</strong></td>
+<td>최종 점검 · 그룹 편성(4~5명) · 발표 순서</td>
+</tr>
+<tr>
+<td>3시간</td>
+<td><strong>발표회</strong></td>
+<td>1인 5분 발표 + 2분 질문 · 상호 피드백 · 베스트 선정</td>
+</tr>
+<tr>
+<td>1시간</td>
+<td><strong>마무리</strong></td>
+<td>재취업 활용 가이드 · 오늘의 1건(마지막) · 수료</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ <strong>발표는 화면 캡처로.</strong> 어제 안내대로 라이브 시연 대신 캡처 화면을 씁니다. 네트워크·사용량 변수를 발표날에 감수할 이유가 없습니다.</p>
+</blockquote>
+<hr />
+<h1 id="1-1">1부 · 발표 준비 (1시간)</h1>
+<h2 id="1-5-5">① 최종 점검 — 5분 5칸</h2>
+<p>어제 만든 발표자료를 시간표에 다시 맞춰봅니다.</p>
+<table>
+<thead>
+<tr>
+<th>구간</th>
+<th>시간</th>
+<th>확인</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>문제</td>
+<td>30초</td>
+<td>첫 문장이 <strong>외워져</strong> 있는가</td>
+</tr>
+<tr>
+<td>데이터·방법</td>
+<td>1분</td>
+<td>순서(점검→정제→탐색→분석)가 한 장에 있는가</td>
+</tr>
+<tr>
+<td><strong>결과</strong></td>
+<td><strong>2분</strong></td>
+<td>그래프가 보이고 <strong>숫자 하나</strong>가 크게 있는가</td>
+</tr>
+<tr>
+<td>판단·배움</td>
+<td>1분</td>
+<td><strong>내가 내린 판단</strong> 하나가 들어 있는가</td>
+</tr>
+<tr>
+<td>다음</td>
+<td>30초</td>
+<td>다음 단계 한 줄로 끝나는가</td>
+</tr>
+</tbody>
+</table>
+<p><strong>발표 전 마지막 5개</strong></p>
+<pre><code>□ 발표 파일이 열리는가 (백업: USB/이메일)
+□ 그래프가 깨지지 않는가
+□ 슬라이드의 숫자 = 내 실제 결과인가 (마지막 검수)
+□ 시간을 재봤는가 (5분 ± 30초)
+□ 첫 문장을 소리 내어 세 번 말해봤는가
+</code></pre>
+<h2 id="2">② 발표자 카드 — 네 줄만</h2>
+<p>발표 직전, 이 네 줄을 채워 손에 들고 나가세요. 머리가 하얘지면 이 카드만 보면 됩니다.</p>
+<pre><code>나는 [        ] 업무를 자동화했다
+가장 중요한 판단은 [        ] 였다
+결과 숫자 하나: [        ]
+다음에 할 것: [        ]
+</code></pre>
+<h2 id="3_1">③ 그룹 편성</h2>
+<ul>
+<li>4~5명 × 5~6그룹 — <strong>다른 도메인끼리</strong> 섞습니다 (같은 분야끼리 모이면 배울 게 줄어듭니다)</li>
+<li>그룹 안에서 발표 순서 정하기 · 타임키퍼 1명 지정 (5분 알림)</li>
+</ul>
+<hr />
+<h1 id="2-3">2부 · 그룹 발표회 (3시간)</h1>
+<h2 id="_4">발표 규칙</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>발표</td>
+<td><strong>5분</strong> — 타임키퍼가 4분 30초에 신호</td>
+</tr>
+<tr>
+<td>질문</td>
+<td><strong>2분</strong> — 질문이 없으면 피드백 양식의 "궁금한 것"을 읽습니다</td>
+</tr>
+<tr>
+<td>태도</td>
+<td>완성도가 아니라 <strong>완주를 박수받는 자리</strong>입니다. 미완성 v1도 당당하게</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_5">듣는 사람의 미션 ⭐ — 피드백 양식</h2>
+<p>발표마다 <strong>세 줄</strong>을 적어 발표자에게 전달합니다. (양식 인쇄물 배포)</p>
+<pre><code>□ 좋았던 것 하나: ______________________
+□ 궁금한 것 하나: ______________________
+□ 내 프로젝트에 훔쳐올 것 하나: ______________________
+</code></pre>
+<h3 id="_6">🔍 그리고 들으면서 이걸 찾아보세요</h3>
+<blockquote>
+<p><strong>도메인이 전부 다른데, 발표 순서가 다 비슷하지 않습니까?</strong></p>
+</blockquote>
+<pre><code>□ 점검하고 → 정제하고 → 탐색하고 → 분석하고 → 판단했다
+</code></pre>
+<blockquote>
+<h3 id="_7">💡 <strong>그게 오늘의 마지막 발견입니다. 워크플로우는 하나였습니다.</strong></h3>
+<p>펭귄도, 자전거도, 수질도, 실험 데이터도 — <strong>같은 순서</strong>로 풀렸습니다.<br />
+이 방에서 오늘 확인한 것: <strong>도메인이 바뀌어도 여러분의 워크플로우는 그대로 간다.</strong><br />
+그러니 다음 직장의 낯선 데이터 앞에서도, 순서는 이미 알고 계신 겁니다.</p>
+</blockquote>
+<h2 id="_8">베스트 포트폴리오</h2>
+<p>전 그룹 발표 후, 그룹별 추천 1명씩 → 전체 공유 → 선정. 기준은 화려함이 아닙니다:</p>
+<table>
+<thead>
+<tr>
+<th>기준</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>⏱ 30초 전달력</td>
+<td>첫 30초에 뭘 한 사람인지 나왔는가</td>
+</tr>
+<tr>
+<td>🔢 Before/After</td>
+<td>성과가 수치로 잡히는가</td>
+</tr>
+<tr>
+<td>🧭 판단 근거</td>
+<td>"왜 그렇게 했나"가 있는가</td>
+</tr>
+<tr>
+<td>🔁 재현 가능성</td>
+<td>남이 따라 할 수 있게 정리됐는가</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="3-1">3부 · 재취업 활용 가이드 · 수료 (1시간)</h1>
+<h2 id="a">A · 이력서에 쓰는 법 — 약한 문장 → 강한 문장</h2>
+<table>
+<thead>
+<tr>
+<th>약한 표현 ✗</th>
+<th><strong>강한 표현 ○</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"AI 도구 사용 경험 있음"</td>
+<td>"Claude Code로 반복 데이터 점검 업무를 자동화해 처리 시간 단축"</td>
+</tr>
+<tr>
+<td>"파이썬 데이터 분석 가능"</td>
+<td>"AI가 작성한 분석 코드를 검수·재지시하는 방식으로 프로젝트 1건 완주"</td>
+</tr>
+<tr>
+<td>"교육 수료"</td>
+<td>"WISET AI 과정 45시간 — 업무 자동화 사례집·GitHub 포트폴리오 산출"</td>
+</tr>
+</tbody>
+</table>
+<p><strong>내 버전은 클로드에게 — 마지막 실습</strong></p>
+<pre><code>내 &quot;오늘의 1건&quot; 9줄을 붙여넣을게: [Day1~Day9 기록]
+
+이걸 바탕으로 이력서에 쓸 AI 활용 역량 문장 3개를 만들어줘.
+&quot;도구를 써봤다&quot;가 아니라 &quot;무엇을 어떻게 개선했다&quot; 구조로.
+과장은 빼고, 실제 한 것만.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — 그대로 이력서에 붙여도 되는 문장 3개. <strong>읽고 사실만 남기세요.</strong></p>
+<h2 id="b-3">B · 경력 공백 문구 — 3종 (배포물)</h2>
+<table>
+<thead>
+<tr>
+<th>공백</th>
+<th>뼈대</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1~3년</td>
+<td>출산·육아 (○개월) └ WISET AI 역량 강화 과정 수료 (2026)</td>
+</tr>
+<tr>
+<td>3~7년</td>
+<td>출산·육아 및 자기계발 (○년) └ 데이터 분석 학습 └ WISET 수료 + <strong>프로젝트 링크</strong></td>
+</tr>
+<tr>
+<td>7년+</td>
+<td>경력단절 (양육) (○년) └ 복귀 준비: 전공 최신 트렌드 + AI 역량 └ WISET 수료 + 자격·프로젝트</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 공통 원칙 — <strong>기간을 숨기지 않고, 그 기간의 산출물을 링크로 붙인다.</strong> 여러분은 이제 붙일 링크가 있습니다.</p>
+</blockquote>
+<h2 id="c">C · 어디에 내나 — 특화 채널</h2>
+<table>
+<thead>
+<tr>
+<th>채널</th>
+<th>특징</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>여성새로일하기센터 (새일센터)</td>
+<td>새일여성인턴 — 인턴 경험 + 기업 지원금 구조</td>
+</tr>
+<tr>
+<td>WISET W브릿지</td>
+<td>과학기술 분야 경력복귀 지원</td>
+</tr>
+<tr>
+<td>워크넷</td>
+<td>경단녀 우대 공고 섹션</td>
+</tr>
+<tr>
+<td>잡알리오</td>
+<td>공공기관 채용 모음</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ 지원 조건·기간은 <strong>접수 시점에 공식 사이트에서 직접 확인</strong>하세요. (제도는 바뀝니다)</p>
+</blockquote>
+<h2 id="d-3">D · 면접에서 나올 질문 3개 — 답의 뼈대는 이미 있습니다</h2>
+<table>
+<thead>
+<tr>
+<th>예상 질문</th>
+<th>답의 뼈대 (배운 날)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>"결측치를 어떻게 처리하셨나요?"</em></td>
+<td>개수만 안 믿고 실제 값 확인 → <strong>왜 비었는지</strong> 근거로 처리 (Day 2)</td>
+</tr>
+<tr>
+<td><em>"AI가 만든 결과를 어떻게 믿죠?"</em></td>
+<td>성공 신호·표본 수·상식 대조로 <strong>검수</strong> — R² 1.0을 의심해 커닝을 잡은 사례 (Day 4)</td>
+</tr>
+<tr>
+<td><em>"이상치는 다 제거하셨나요?"</em></td>
+<td>측정 오류와 진짜 사건을 <strong>구분해서 반대로 처리</strong> (Day 2·5)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 전부 여러분이 <strong>직접 겪은 이야기</strong>입니다. 외울 게 아니라 꺼내면 됩니다.</p>
+</blockquote>
+<h2 id="e-ai">E · (해당자) AI 강사·교육을 생각하시는 분</h2>
+<p>사례집은 그대로 <strong>강의 콘텐츠</strong>가 됩니다. 4단계:</p>
+<pre><code>□ 사례집에서 사례 1개 선택 (반전이 있는 것 — 커닝·습도 0% 같은)
+□ &quot;따라 하기&quot; 실습으로 재구성 (내가 쓴 프롬프트를 학습자용으로)
+□ 30분 미니 강의안: 문제 5분 → 시연 10분 → 실습 10분 → 정리 5분
+□ 오늘 발표자료가 그 강의의 슬라이드 초안
+</code></pre>
+<h2 id="f">F · 수료 후 계속하기 — 멈추지 않는 법</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>📌 매주 1건</td>
+<td>접목 카드의 다음 줄 — <strong>주 1회, 업무 하나씩</strong> 자동화를 늘립니다</td>
+</tr>
+<tr>
+<td>📓 기록</td>
+<td>"오늘의 1건"을 계속 씁니다 — 사례집이 자랍니다</td>
+</tr>
+<tr>
+<td>🔁 재사용</td>
+<td>Day 6에 만든 <strong>반복 실행용 지시문</strong>이 여러분의 시작 버튼입니다</td>
+</tr>
+<tr>
+<td>🙋 막히면</td>
+<td>만능 문장 8개(치트시트)는 수료 후에도 그대로 통합니다</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="1">오늘의 1건 — 마지막</h1>
+<pre><code>Day9  오늘 시킨 것 / 된 것: ______________________________
+</code></pre>
+<ul>
+<li><em>"25개 사례를 들었다 — 훔쳐올 것 세 개를 적었다"</em></li>
+<li><em>"5분 발표를 해냈다 — 석 달 전엔 터미널도 처음 봤는데"</em></li>
+<li><em>"이력서 문장 3개를 만들었다 — 내일 지원서에 쓴다"</em></li>
+</ul>
+<blockquote>
+<h3 id="day1">이제 아홉 줄이 됐습니다. <strong>위로 올라가 Day1부터 읽어보세요.</strong></h3>
+<p><em>"클로드 코드를 켰다"</em> 로 시작해서 <em>"내 업무를 자동화하고 발표했다"</em> 로 끝납니다.<br />
+그 아홉 줄이 여러분의 <strong>업무 AI 에이전트화 사례집</strong>이고, 3주 전의 나와 오늘의 나 사이의 거리입니다.</p>
+<p>수료를 축하합니다. <strong>켜는 법을 아는 사람은 많지 않습니다. 여러분은 이제 시키는 법까지 압니다.</strong></p>
+</blockquote>
+</main>
+<nav class="toc"><div class="toctitle">목차</div><div class="toc">
+<ul>
+<li><a href="#24-day-9">24차시 · Day 9</a><ul>
+<li><a href="#9-5">그룹 발표회 · 수료 — 「9일의 기록을 5분에 담다」</a></li>
+<li><a href="#_1">어제 질문부터 회수합니다</a><ul>
+<li><a href="#_2">오늘 가장 많이 배워 가는 사람은 발표자가 아니라, 메모하며 듣는 사람입니다.</a></li>
+</ul>
+</li>
+<li><a href="#3">그림 3장 — 최종판</a></li>
+<li><a href="#_3">오늘의 흐름</a></li>
+</ul>
+</li>
+<li><a href="#1-1">1부 · 발표 준비 (1시간)</a><ul>
+<li><a href="#1-5-5">① 최종 점검 — 5분 5칸</a></li>
+<li><a href="#2">② 발표자 카드 — 네 줄만</a></li>
+<li><a href="#3_1">③ 그룹 편성</a></li>
+</ul>
+</li>
+<li><a href="#2-3">2부 · 그룹 발표회 (3시간)</a><ul>
+<li><a href="#_4">발표 규칙</a></li>
+<li><a href="#_5">듣는 사람의 미션 ⭐ — 피드백 양식</a><ul>
+<li><a href="#_6">🔍 그리고 들으면서 이걸 찾아보세요</a></li>
+<li><a href="#_7">💡 그게 오늘의 마지막 발견입니다. 워크플로우는 하나였습니다.</a></li>
+</ul>
+</li>
+<li><a href="#_8">베스트 포트폴리오</a></li>
+</ul>
+</li>
+<li><a href="#3-1">3부 · 재취업 활용 가이드 · 수료 (1시간)</a><ul>
+<li><a href="#a">A · 이력서에 쓰는 법 — 약한 문장 → 강한 문장</a></li>
+<li><a href="#b-3">B · 경력 공백 문구 — 3종 (배포물)</a></li>
+<li><a href="#c">C · 어디에 내나 — 특화 채널</a></li>
+<li><a href="#d-3">D · 면접에서 나올 질문 3개 — 답의 뼈대는 이미 있습니다</a></li>
+<li><a href="#e-ai">E · (해당자) AI 강사·교육을 생각하시는 분</a></li>
+<li><a href="#f">F · 수료 후 계속하기 — 멈추지 않는 법</a></li>
+</ul>
+</li>
+<li><a href="#1">오늘의 1건 — 마지막</a><ul>
+<li><a href="#day1">이제 아홉 줄이 됐습니다. 위로 올라가 Day1부터 읽어보세요.</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+</div>
+<script>
+document.querySelectorAll('pre').forEach(function(pre){
+  var b=document.createElement('button');
+  b.className='copybtn'; b.textContent='복사';
+  b.onclick=function(){
+    var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+    navigator.clipboard.writeText(t).then(function(){
+      b.textContent='복사됨'; b.classList.add('done');
+      setTimeout(function(){b.textContent='복사'; b.classList.remove('done');},1400);
+    });
+  };
+  pre.appendChild(b);
+});
+var bar=document.getElementById('bar');
+window.addEventListener('scroll',function(){
+  var h=document.documentElement;
+  var p=h.scrollTop/((h.scrollHeight-h.clientHeight)||1)*100;
+  bar.style.width=p+'%';
+});
+</script>
+</body>
+</html>

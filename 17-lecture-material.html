@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>17차시 · Day 2</title>
+<style>
+:root{
+  --bg:#ffffff; --fg:#1a1a2e; --muted:#5b6474; --line:#e3e6ec;
+  --accent:#4A90D9; --accent-soft:#eaf2fb;
+  --cta:#F5A623; --code-bg:#1a1a2e; --code-fg:#e8ecf4;
+  --ok:#1f8a4c; --ok-soft:#e8f6ee; --warn:#b3541e; --warn-soft:#fdf1e6;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font-family:"Pretendard","Pretendard Variable","Malgun Gothic","맑은 고딕",
+              -apple-system,"Segoe UI",system-ui,sans-serif;
+  font-size:19px; line-height:1.75; word-break:keep-all;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px;display:flex;gap:36px}
+main{flex:1;min-width:0;padding:48px 0 140px}
+h1,h2,h3{line-height:1.3;word-break:keep-all}
+h1{
+  font-size:2.15em;margin:2.4em 0 .5em;padding-bottom:.35em;
+  border-bottom:4px solid var(--accent);
+}
+h1:first-of-type{margin-top:.2em}
+h2{font-size:1.5em;margin:2em 0 .6em;color:#22304a}
+h3{font-size:1.16em;margin:1.6em 0 .4em;color:#33405c}
+p{margin:.85em 0}
+hr{border:0;border-top:1px solid var(--line);margin:2.6em 0}
+a{color:var(--accent)}
+strong{font-weight:700}
+ul,ol{padding-left:1.5em}
+li{margin:.35em 0}
+
+/* 인용 = 팁/강조 */
+blockquote{
+  margin:1.4em 0; padding:1em 1.3em;
+  background:var(--accent-soft); border-left:5px solid var(--accent);
+  border-radius:0 10px 10px 0; color:#233;
+}
+blockquote p{margin:.4em 0}
+blockquote h3{margin:.2em 0;font-size:1.25em;color:#123}
+
+/* 코드 */
+pre{
+  position:relative; background:var(--code-bg); color:var(--code-fg);
+  padding:1.15em 1.3em; border-radius:12px; overflow-x:auto;
+  font-size:1.02em; line-height:1.65; margin:1.1em 0;
+  box-shadow:0 2px 14px rgba(26,26,46,.16);
+}
+pre code{
+  font-family:"D2Coding","Cascadia Mono","Consolas","Malgun Gothic",monospace;
+  white-space:pre-wrap; word-break:break-word;
+}
+:not(pre)>code{
+  background:#f1f3f7; color:#1a2b45; padding:.15em .45em;
+  border-radius:6px; font-size:.94em;
+  font-family:"D2Coding","Consolas",monospace;
+}
+.copybtn{
+  position:absolute; top:9px; right:10px;
+  background:rgba(255,255,255,.13); color:#fff; border:1px solid rgba(255,255,255,.28);
+  border-radius:7px; padding:5px 12px; font-size:.72em; cursor:pointer;
+  font-family:inherit; letter-spacing:.02em;
+}
+.copybtn:hover{background:rgba(255,255,255,.26)}
+.copybtn.done{background:var(--ok);border-color:var(--ok)}
+
+/* 표 */
+table{border-collapse:collapse;width:100%;margin:1.3em 0;font-size:.97em}
+th,td{border:1px solid var(--line);padding:.6em .8em;text-align:left;vertical-align:top}
+th{background:#f5f7fa;font-weight:700}
+tr:nth-child(even) td{background:#fafbfd}
+
+/* 목차 */
+nav.toc{
+  width:250px;flex:0 0 250px;position:sticky;top:0;align-self:flex-start;
+  max-height:100vh;overflow-y:auto;padding:48px 0 60px;font-size:.86em;
+}
+nav.toc .toctitle{font-weight:700;color:var(--muted);letter-spacing:.06em;margin-bottom:.7em}
+nav.toc ul{list-style:none;padding-left:0;margin:0;border-left:2px solid var(--line)}
+nav.toc ul ul{padding-left:.85em;border:0}
+nav.toc li{margin:0}
+nav.toc a{display:block;padding:.34em .9em;color:var(--muted);text-decoration:none;border-radius:0 6px 6px 0}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+
+/* 진행 바 */
+#bar{position:fixed;top:0;left:0;height:4px;background:var(--cta);width:0;z-index:99}
+
+@media (max-width:1000px){
+  nav.toc{display:none}
+  body{font-size:17px}
+  .wrap{padding:0 18px}
+}
+@media print{
+  nav.toc,.copybtn,#bar{display:none}
+  body{font-size:11pt}
+  pre{background:#f4f5f8;color:#111;box-shadow:none;border:1px solid #ccc}
+  h1{page-break-before:always}
+  h1:first-of-type{page-break-before:avoid}
+}
+</style>
+<link rel="stylesheet" href="meta-redesign.css">
+</head>
+<body>
+<div id="bar"></div>
+<div class="wrap">
+<main>
+<h1 id="17-day-2">17차시 · Day 2</h1>
+<h2 id="_1">전처리와 시각화 — 「숨겨진 패턴을 찾아라」</h2>
+<blockquote>
+<p><strong>오늘 할 일 — 딱 하나</strong><br />
+<strong>연구자가 실제로 적은 원본을, 분석할 수 있는 상태로 만든다.</strong></p>
+</blockquote>
+<hr />
+<h2 id="_2">어제 보신 건 이미 정리된 데이터였습니다</h2>
+<p>어제 열었던 <code>penguins.csv</code> 는 <strong>누군가 미리 깔끔하게 정리해 둔 것</strong>입니다.<br />
+컬럼 7개, 이름도 깔끔했죠.</p>
+<p>오늘 여는 건 <strong>연구자가 남극에서 실제로 기록한 원본</strong>입니다.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>어제 <code>penguins.csv</code></th>
+<th><strong>오늘 <code>penguins_raw.csv</code></strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>컬럼</td>
+<td>7개</td>
+<td><strong>17개</strong></td>
+</tr>
+<tr>
+<td>컬럼명</td>
+<td><code>bill_length_mm</code></td>
+<td><code>Culmen Length (mm)</code> ← <strong>공백·괄호</strong></td>
+</tr>
+<tr>
+<td>종 이름</td>
+<td><code>Adelie</code></td>
+<td><code>Adelie Penguin (Pygoscelis adeliae)</code></td>
+</tr>
+<tr>
+<td>날짜</td>
+<td>없음</td>
+<td><strong>있음</strong></td>
+</tr>
+<tr>
+<td>메모</td>
+<td>없음</td>
+<td><strong>있음</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<h3 id="_3">실무에서 받는 데이터는 <strong>오늘 것에 가깝습니다.</strong></h3>
+<p>어제가 결승선이었다면, 오늘은 출발선입니다.</p>
+</blockquote>
+<hr />
+<h2 id="3">그림 3장 — 오늘의 버전</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>① 3자 분업</strong></td>
+<td>정리는 클로드가, <strong>"이 컬럼이 필요한가·이 값이 말이 되나" 판단은 여러분이</strong></td>
+</tr>
+<tr>
+<td><strong>② 에이전트</strong></td>
+<td>오늘은 <strong>진짜로 파일을 만듭니다.</strong> <code>data/processed/</code> 에 정제본이 생깁니다</td>
+</tr>
+<tr>
+<td><strong>③ IPO</strong></td>
+<td><strong>I</strong> 17열 원본 → <strong>P</strong> 정리·시각화 → <strong>O</strong> 분석 가능한 정제본 + 그래프</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ 어제는 <strong>읽기</strong>만 했지만 오늘은 <strong>고치기</strong>입니다. 원본 보존 3원칙이 오늘부터 진짜입니다.</p>
+</blockquote>
+<hr />
+<h2 id="_4">오늘 끝나면</h2>
+<ul>
+<li>17개 컬럼에서 <strong>쓸 것만 골라낼</strong> 수 있습니다</li>
+<li><strong><code>isnull()</code> 로는 안 잡히는 결측</strong>을 찾아낼 수 있습니다</li>
+<li>결측이 <strong>왜 생겼는지</strong> 데이터에서 읽어낼 수 있습니다</li>
+<li>전체로는 안 보이던 <strong>이상치를 찾아냅니다</strong></li>
+<li>상식과 반대인 <strong>숨겨진 패턴 하나</strong>를 발견합니다</li>
+</ul>
+<h2 id="3_1">오늘 꼭 기억할 3가지</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔒</td>
+<td><strong>원본은 그대로.</strong> 정제본은 <code>data/processed/</code> 에 <strong>새 이름</strong>으로</td>
+</tr>
+<tr>
+<td>👀</td>
+<td><strong>결측치 개수만 믿지 마라.</strong> 실제 값을 직접 봐야 한다</td>
+</tr>
+<tr>
+<td>📝</td>
+<td>무엇을 왜 그렇게 처리했는지 <strong>적는다</strong> — 안 적으면 3주 뒤 설명 못 합니다</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="_5">시작하기</h1>
+<p>바탕화면 → <code>claude-lab</code> → <code>my-project</code> → 주소창 <code>powershell</code> → <code>claude</code></p>
+<pre><code>outputs/ 안에 day2 폴더를 만들고,
+data/raw/ 에 어떤 파일이 있는지 보여줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — <code>penguins.csv</code> · <strong><code>penguins_raw.csv</code></strong> · <code>day.csv</code> 세 개가 보입니다. 오늘 쓰는 건 <strong><code>penguins_raw.csv</code></strong> 입니다. (<code>day.csv</code> 는 다음 주용 — 열지 않아도 됩니다)</p>
+<hr />
+<h1 id="1-1">1부 · 이론 (1시간)</h1>
+<hr />
+<h2 id="a">A · 빠진 값을 어떻게 할까</h2>
+<h3 id="4">방법은 크게 4가지</h3>
+<table>
+<thead>
+<tr>
+<th>방법</th>
+<th>무엇을 하나</th>
+<th>언제 쓰나</th>
+<th>조심할 점</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>① 삭제</strong></td>
+<td>빈칸이 있는 <strong>줄을 통째로</strong> 버림</td>
+<td>빠진 게 <strong>아주 적을 때</strong></td>
+<td>데이터가 줄어든다</td>
+</tr>
+<tr>
+<td><strong>② 평균으로 채우기</strong></td>
+<td>그 컬럼의 <strong>평균값</strong></td>
+<td>숫자 컬럼, 분포가 고를 때</td>
+<td><strong>분포가 좁아진다</strong></td>
+</tr>
+<tr>
+<td><strong>③ 중앙값으로 채우기</strong></td>
+<td>그 컬럼의 <strong>가운데 값</strong></td>
+<td><strong>튀는 값이 있을 때</strong></td>
+<td>평균보다 안전</td>
+</tr>
+<tr>
+<td><strong>④ 비슷한 것 보고 채우기 (KNN)</strong></td>
+<td><strong>닮은 줄들</strong>을 찾아 그 값으로</td>
+<td>변수 관계가 뚜렷할 때</td>
+<td>복잡하고 설명이 어렵다</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_6">🔴 그런데 오늘 더 중요한 건 이겁니다</h3>
+<blockquote>
+<h3 id="_7"><strong>"어떻게 채울까" 보다 </strong>"왜 비었을까"<strong> 가 먼저입니다.</strong></h3>
+</blockquote>
+<p>오늘 데이터에는 <strong>메모 컬럼(<code>Comments</code>)</strong> 이 있습니다.<br />
+연구자가 <strong>왜 측정을 못 했는지 직접 적어놨습니다.</strong></p>
+<blockquote>
+<p><em>"Sexing primers did not amplify."</em> — 성별 판별 실험이 실패했다<br />
+<em>"Not enough blood for isotopes."</em> — 혈액이 부족했다</p>
+</blockquote>
+<p><strong>이유를 알면 처리 방법이 정해집니다.</strong></p>
+<table>
+<thead>
+<tr>
+<th>왜 비었나</th>
+<th>그럼 어떻게</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>실험이 실패해서</td>
+<td>값을 <strong>만들어내면 안 된다.</strong> "모름"으로 남긴다</td>
+</tr>
+<tr>
+<td>우연히 측정을 못 해서</td>
+<td>채워도 괜찮을 수 있다</td>
+</tr>
+<tr>
+<td>원래 해당사항이 없어서</td>
+<td>0? 결측? — <strong>판단이 필요하다</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 <strong>면접에서 나오는 질문입니다.</strong> <em>"결측치를 어떻게 처리하셨나요?"</em><br />
+좋은 답은 <em>"평균으로 채웠습니다"</em> 가 아니라 <strong><em>"이런 이유로 비어 있어서 이렇게 했습니다"</em></strong> 입니다.</p>
+</blockquote>
+<hr />
+<h2 id="b">B · 튀는 값을 어떻게 할까</h2>
+<h3 id="outlier">이상치(outlier) = 다른 값들과 유난히 동떨어진 값</h3>
+<table>
+<thead>
+<tr>
+<th>방법</th>
+<th>원리</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IQR</strong></td>
+<td>가운데 50% 범위에서 너무 멀면 이상치 — boxplot의 <strong>점</strong>이 이것</td>
+</tr>
+<tr>
+<td><strong>Z-score</strong></td>
+<td>평균에서 표준편차 <strong>3배</strong> 넘게 떨어지면 의심</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 <strong>찾는 건 클로드가 합니다.</strong> 계산식은 몰라도 됩니다.</p>
+</blockquote>
+<h3 id="_8">🔴 찾은 다음이 진짜입니다</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>이런 것</th>
+<th>어떻게</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>측정 오류</strong></td>
+<td>체중이 <strong>50g</strong> 인 펭귄 / 부리가 <strong>300mm</strong></td>
+<td>고치거나 뺀다</td>
+</tr>
+<tr>
+<td><strong>진짜 이상치</strong></td>
+<td>유난히 큰 개체</td>
+<td><strong>남긴다.</strong> 오히려 <strong>발견</strong>일 수 있다</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<h3 id="_9"><strong>이 구분은 클로드가 못 합니다.</strong></h3>
+<p>클로드는 "통계적으로 튄다"까지만 압니다. <strong>"말이 되는 값인가"</strong> 는 그 분야를 아는 사람이 판단합니다.</p>
+<p>⚠️ <strong>자동으로 지우지 마세요.</strong> 다 지우면 데이터가 예뻐 보이지만 <strong>진짜 발견을 버린 것</strong>일 수 있습니다.</p>
+</blockquote>
+<hr />
+<h2 id="c">C · 어떤 그래프를 언제 쓰나</h2>
+<table>
+<thead>
+<tr>
+<th>그래프</th>
+<th>무엇을 보나</th>
+<th>이럴 때</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>히스토그램</strong></td>
+<td>한 값의 <strong>분포 모양</strong></td>
+<td><em>"체중이 고르게 퍼져 있나?"</em></td>
+</tr>
+<tr>
+<td><strong>boxplot</strong></td>
+<td>집단별 <strong>분포와 이상치</strong></td>
+<td><em>"종별로 체중이 어떻게 다른가?"</em></td>
+</tr>
+<tr>
+<td><strong>산점도</strong></td>
+<td>두 값의 <strong>관계</strong></td>
+<td><em>"날개가 길면 무거운가?"</em></td>
+</tr>
+<tr>
+<td><strong>히트맵</strong></td>
+<td><strong>여러 값의 관계를 한눈에</strong></td>
+<td><em>"어떤 변수가 체중과 관련 있나?"</em></td>
+</tr>
+<tr>
+<td><strong>페어플롯</strong></td>
+<td>모든 조합의 산점도</td>
+<td><em>"일단 전체를 훑어보고 싶다"</em></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 <strong>순서가 있습니다.</strong> ① 하나씩(히스토그램·boxplot) → ② 둘씩(산점도) → ③ 전체(히트맵)</p>
+</blockquote>
+<hr />
+<h2 id="d-5">D · 클로드가 만든 코드, 5분 읽기법</h2>
+<blockquote>
+<p><strong>문법을 배우는 게 아닙니다. 검수하는 법을 배웁니다.</strong> 세 군데만 봅니다.</p>
+</blockquote>
+<h3 id="1">① 맨 위 — 무슨 도구를 썼나</h3>
+<pre><code class="language-python">import pandas as pd
+import seaborn as sns
+</code></pre>
+<blockquote>
+<p><em>"표 다루는 도구랑 그래프 도구를 가져왔구나"</em> — 이 정도면 충분합니다.</p>
+</blockquote>
+<h3 id="2">② 파일을 읽는 줄 — <strong>어느 파일을 열었나</strong> ⭐</h3>
+<pre><code class="language-python">df = pd.read_csv(&quot;data/raw/penguins_raw.csv&quot;)
+</code></pre>
+<blockquote>
+<h3 id="raw-processed">🔴 <code>raw</code> 를 읽었나 <code>processed</code> 를 읽었나? <strong>엉뚱한 파일이면 뒤는 전부 틀립니다.</strong></h3>
+</blockquote>
+<h3 id="3_2">③ 저장하는 줄 — <strong>어디에 썼나</strong> ⭐</h3>
+<pre><code class="language-python">df.to_csv(&quot;data/processed/penguins_clean.csv&quot;, index=False)
+plt.savefig(&quot;outputs/day2/boxplot.png&quot;)
+</code></pre>
+<blockquote>
+<h3 id="dataraw">🔴 <strong><code>data/raw/</code> 에 쓰고 있으면 즉시 중단.</strong> 원본을 덮어씁니다.</h3>
+</blockquote>
+<p><strong>모르겠으면 그냥 물어보세요</strong></p>
+<pre><code>이 코드에서 어떤 파일을 읽고 어디에 저장하는지만 알려줘.
+</code></pre>
+<blockquote>
+<p>💡 <strong>③ 읽는 파일 · ⑧ 저장 위치</strong> — 어제 배운 <strong>I와 O</strong>입니다. 코드를 읽을 때도 똑같습니다.</p>
+</blockquote>
+<hr />
+<h1 id="2-4">2부 · 실습 「숨겨진 패턴을 찾아라」 (4시간)</h1>
+<blockquote>
+<p><strong>기본 과제는 실습 1~6까지.</strong> 여기까지 하시면 오늘 목표 달성입니다.</p>
+</blockquote>
+<hr />
+<h2 id="1-17">실습 1 · 원본 훑어보기 — 17개 컬럼에서 쓸 것 고르기</h2>
+<pre><code>data/raw/penguins_raw.csv 를 불러와서
+
+1) 행과 열이 몇 개인지
+2) 컬럼 이름과 자료형을 표로
+3) 각 컬럼에 고유값이 몇 개씩 있는지
+
+정리해서 보여줘. 원본은 수정하지 마.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — <strong>344행 × 17열</strong></p>
+<h3 id="_10">🔍 이제 여러분이 판단합니다</h3>
+<blockquote>
+<p><strong>고유값이 1개뿐인 컬럼이 2개 있습니다. 찾아보세요.</strong></p>
+</blockquote>
+<p>전부 같은 값이면 <strong>비교할 수가 없습니다.</strong> 분석에 쓸모가 없습니다.</p>
+<pre><code>고유값이 1개뿐인 컬럼을 찾아서, 왜 분석에 쓸 수 없는지 설명해줘.
+그리고 지금 데이터에서 분석에 꼭 필요한 컬럼만 추리면
+어떤 것들이 남는지 근거와 함께 알려줘.
+</code></pre>
+<blockquote>
+<p>💡 <strong>17개를 다 쓸 필요 없습니다.</strong> 고르는 것도 실력입니다.</p>
+</blockquote>
+<hr />
+<h2 id="2_1">실습 2 · 컬럼 이름 정리</h2>
+<p>지금 컬럼 이름을 보세요. <code>Culmen Length (mm)</code> — <strong>공백과 괄호</strong>가 있습니다.</p>
+<blockquote>
+<p>코드에서 다룰 때 매번 따옴표로 감싸야 하고, 오타가 나기 쉽습니다.</p>
+</blockquote>
+<pre><code>컬럼 이름을 다루기 쉽게 바꿔줘.
+
+- 공백은 밑줄로
+- 괄호와 특수문자는 제거
+- 전부 소문자로
+
+바꾸기 전과 후를 대조표로 보여주고,
+결과를 data/processed/ 에 새 이름으로 저장해줘.
+원본은 수정하지 마.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — <code>Culmen Length (mm)</code> → <code>culmen_length_mm</code> 형태. <strong><code>data/raw/</code> 는 그대로.</strong></p>
+<blockquote>
+<p>💡 종 이름도 <code>Adelie Penguin (Pygoscelis adeliae)</code> 처럼 깁니다. 짧게 줄일지 <strong>여러분이 정하세요.</strong></p>
+</blockquote>
+<hr />
+<h2 id="3_3">실습 3 · 결측치 — 개수만 믿으면 속습니다 ⭐</h2>
+<h3 id="_11">먼저 평범하게 세어봅니다</h3>
+<pre><code>각 컬럼의 결측치 개수를 표로 정리해줘.
+아직 아무것도 고치지 마.
+</code></pre>
+<p>성별(<code>sex</code>) 결측이 <strong>10개</strong>로 나올 겁니다.</p>
+<h3 id="_12">이제 실제 값을 봅니다</h3>
+<pre><code>sex 컬럼에 어떤 값이 각각 몇 개씩 있는지 세어줘.
+결측치 개수만 보지 말고, 실제로 들어있는 값을 전부 보여줘.
+</code></pre>
+<blockquote>
+<h3 id="_13">🔴 <strong>점(<code>.</code>) 이 하나 있습니다.</strong></h3>
+</blockquote>
+<p><strong>✅ 성공 신호</strong> — <code>MALE</code> / <code>FEMALE</code> / 빈칸 말고 <strong><code>.</code> 이 1개</strong> 보입니다.</p>
+<h3 id="_14">무슨 일이 일어난 걸까요</h3>
+<pre><code>□ 성별을 모르는 개체는 실제로 몇 마리인가?      → 10개? 11개?
+□ 왜 결측치 개수 표에는 안 잡혔을까?
+□ 이걸 모르고 분석했다면 어떻게 됐을까?
+</code></pre>
+<blockquote>
+<h3 id="_15">💡 <strong><code>.</code> 은 "빈칸"이 아니라 "점이라는 글자"입니다.</strong></h3>
+<p>컴퓨터는 글자가 들어있으니 <strong>값이 있다</strong>고 봅니다. 그래서 결측 집계에 안 잡힙니다.</p>
+<p><strong>실무에서 가장 자주 당하는 함정입니다.</strong><br />
+<em>"결측 없다고 나왔는데 왜 결과가 이상하죠?"</em> — 대부분 이겁니다.<br />
+<code>-</code>, <code>N/A</code>, <code>없음</code>, <code>0</code>, 공백 한 칸… 모양만 다를 뿐 같은 문제입니다.</p>
+</blockquote>
+<p><strong>처리합니다</strong></p>
+<pre><code>sex 컬럼의 &quot;.&quot; 을 결측으로 처리하고,
+MALE/FEMALE 표기도 첫 글자만 대문자로 바꿔줘.
+
+바꾼 뒤 다시 세어서, 성별을 모르는 개체가 몇 마리인지 알려줘.
+data/processed/ 에 새 이름으로 저장하고 원본은 수정하지 마.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — 이제 결측이 <strong>11개</strong>로 잡힙니다.</p>
+<hr />
+<h2 id="4_1">실습 4 · 왜 비었을까 — 메모 컬럼 읽기 ⭐</h2>
+<blockquote>
+<p><strong>오늘 이 실습이 다른 수업과 가장 다른 부분입니다.</strong></p>
+</blockquote>
+<pre><code>Comments 컬럼에 어떤 내용들이 몇 번씩 적혀 있는지 보여줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — 연구자가 적은 메모가 나옵니다.</p>
+<pre><code>Sexing primers did not amplify.        (성별 판별 실험 실패)
+Not enough blood for isotopes.         (혈액 부족)
+No blood sample obtained for sexing.   (혈액 채취 못 함)
+Nest never observed with full clutch.  (둥지 관찰 실패)
+</code></pre>
+<h3 id="_16">연결해 봅니다</h3>
+<pre><code>성별(sex)이 비어 있는 개체들의 Comments 를 보여줘.
+결측이 생긴 이유가 메모에 적혀 있는지 확인해줘.
+</code></pre>
+<h3 id="_17">🔴 이제 판단하세요</h3>
+<blockquote>
+<p><strong>성별 판별 실험이 실패해서 비어 있는 값을, 평균이나 최빈값으로 채워도 될까요?</strong></p>
+</blockquote>
+<pre><code>□ 채운다  → 없는 정보를 만들어내는 것 아닌가?
+□ 지운다  → 11마리를 버려도 되나?
+□ &quot;모름&quot;으로 남긴다 → 분석할 때 불편하지 않나?
+</code></pre>
+<blockquote>
+<h3 id="_18"><strong>정답은 없습니다. 그래서 여러분이 정하는 겁니다.</strong></h3>
+<p>그리고 <strong>왜 그렇게 정했는지 적어두세요.</strong> 그게 포트폴리오가 됩니다.</p>
+</blockquote>
+<p><strong>클로드와 상의해도 됩니다</strong></p>
+<pre><code>성별 결측 11개가 &quot;판별 실험 실패&quot; 때문에 생긴 거야.
+이 경우 삭제·대체·모름 유지 중 어떤 게 적절한지
+각각의 장단점과 함께 알려줘. 최종 판단은 내가 할게.
+</code></pre>
+<hr />
+<h2 id="5">실습 5 · 이상치 — 통째로 보면 안 보입니다 ⭐</h2>
+<h3 id="_19">먼저 전체 기준으로 찾아봅니다</h3>
+<pre><code>수치형 컬럼들의 이상치를 IQR 방법으로 찾아줘.
+아직 아무것도 지우지 마. 찾기만 해줘.
+</code></pre>
+<blockquote>
+<h3 id="_20">🔍 <strong>몇 개 나왔나요?</strong></h3>
+</blockquote>
+<p><strong>✅ 성공 신호</strong> — <strong>0개</strong>입니다. 하나도 없습니다.</p>
+<h3 id="_21">"이상치가 없는 깨끗한 데이터네요" — 정말 그럴까요?</h3>
+<pre><code>종(species)별로 나눠서 이상치를 다시 찾아줘.
+전체 기준 결과와 비교해서 표로 보여줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — 이번엔 <strong>6개</strong>가 나옵니다.</p>
+<h3 id="_22">왜 이런 일이</h3>
+<blockquote>
+<p><strong>젠투는 원래 무겁고, 아델리는 원래 가볍습니다.</strong><br />
+셋을 섞어놓으면 범위가 넓어져서 <strong>웬만한 값은 다 "정상"으로 보입니다.</strong></p>
+<p>종별로 나누면 범위가 좁아지고, <strong>그 종 안에서 튀는 개체</strong>가 드러납니다.</p>
+</blockquote>
+<h3 id="_23">🔴 찾았으면 판단하세요</h3>
+<pre><code>□ 이 값이 물리적으로 가능한가?   (체중 2,700g / 4,800g — 말이 되나?)
+□ 측정 오류인가, 진짜 특이한 개체인가?
+□ 지우면 무엇을 잃게 되나?
+</code></pre>
+<blockquote>
+<p>💡 <strong>이게 오늘 가장 중요한 실습입니다.</strong> 도메인 지식이 통계를 이기는 순간입니다.</p>
+</blockquote>
+<hr />
+<h2 id="6-4">실습 6 · 시각화 4종</h2>
+<pre><code>정제한 데이터로 아래 그래프를 그려서 outputs/day2/ 에 저장해줘.
+파일 이름은 알아보기 쉽게, 각각 뭘 보여주는지 한 줄로 설명해줘.
+
+1) 종별 체중 boxplot
+2) 날개 길이와 체중의 산점도 (종별 색 구분)
+3) 체중 히스토그램
+4) 수치형 변수들의 상관관계 히트맵
+
+한글이 깨지지 않게 폰트를 설정해줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — <code>outputs/day2/</code> 에 그림 4장. <strong>탐색기로 확인하세요.</strong></p>
+<blockquote>
+<p>🔧 한글이 □□□ 로 깨지면 → <code>그래프의 한글이 깨져. 한글 폰트를 설정해서 다시 그려줘.</code></p>
+</blockquote>
+<hr />
+<h2 id="7">실습 7 · 히트맵에서 이상한 것 찾기 ⭐ <strong>오늘의 하이라이트</strong></h2>
+<p>방금 만든 <strong>히트맵</strong>을 크게 열어보세요.</p>
+<blockquote>
+<h3 id="_24">🔍 <strong>상식과 반대인 숫자가 하나 있습니다. 찾아보세요.</strong></h3>
+</blockquote>
+<p><strong>힌트</strong> — 부리가 <strong>두꺼우면</strong> 몸집이 클 것 같은데… 그 칸이 <strong>양수인가요, 음수인가요?</strong></p>
+<p><strong>찾으셨으면 물어보세요</strong></p>
+<pre><code>부리 깊이와 체중의 상관이 음수로 나왔어.
+그런데 상식적으로는 반대일 것 같아.
+
+종(species)별로 나눠서 다시 계산해보고,
+왜 전체와 종별 결과가 다른지 설명해줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — 종별로 계산하면 <strong>부호가 뒤집힙니다.</strong></p>
+<blockquote>
+<h3 id="_25">💡 <strong>오늘 두 번째로 같은 교훈입니다.</strong></h3>
+<p>실습 5(이상치)도, 실습 7(상관)도 — <strong>통째로 보면 속고, 나눠 보면 보입니다.</strong></p>
+<p>이게 「숨겨진 패턴」입니다. 3주 뒤 발표에서 쓸 수 있는 소재입니다.</p>
+</blockquote>
+<hr />
+<h2 id="8">실습 8 · 내일 쓸 정제본 저장하기</h2>
+<blockquote>
+<p><strong>내일은 이 파일로 체중을 예측합니다.</strong> 잘 만들어두면 내일 편합니다.</p>
+</blockquote>
+<pre><code>오늘 정리한 내용을 모아서 최종 정제본을 만들어줘.
+
+- 분석에 쓸 컬럼만 남기고
+- 컬럼 이름은 다루기 쉽게
+- 성별의 &quot;.&quot; 처리 반영
+- 결측은 내가 정한 방식대로 [여기에 본인 결정을 쓰세요]
+
+data/processed/ 에 저장하고,
+무엇을 어떻게 처리했는지 요약해줘.
+
+그리고 체중 예측에 어떤 변수가 도움이 될지
+근거와 함께 순서대로 알려줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — <code>data/processed/</code> 에 최종 파일 + 처리 요약.</p>
+<blockquote>
+<p>🤔 <strong>종(species)은 숫자가 아닌데 예측에 쓸 수 있을까요?</strong> 내일 답이 나옵니다.</p>
+</blockquote>
+<hr />
+<h2 id="_26">⚡ 심화 과제</h2>
+<h3 id="1_1">심화 1 · 동위원소 데이터</h3>
+<p>원본에는 <strong>Delta 15 N · Delta 13 C</strong> 라는 컬럼이 있습니다. 먹이와 서식 환경을 추정하는 값입니다.</p>
+<pre><code>Delta 15 N 과 Delta 13 C 의 결측 패턴을 확인하고,
+Comments 와 연결해서 왜 비었는지 설명해줘.
+
+그리고 이 두 값이 종·섬에 따라 다른지 시각화해줘.
+</code></pre>
+<blockquote>
+<p>💡 <strong>이건 진짜 연구 데이터입니다.</strong> 전공하신 분은 해석까지 해보세요.</p>
+</blockquote>
+<h3 id="2_2">심화 2 · 다변량 이상치</h3>
+<pre><code>한 변수 기준이 아니라, 여러 변수를 같이 봤을 때
+&quot;조합이 이상한&quot; 개체를 찾아줘.
+(예: 날개는 긴데 체중은 아주 가벼운 개체)
+
+찾은 개체들이 어떤 점에서 특이한지 표로 설명해줘.
+</code></pre>
+<h3 id="3_4">심화 3 · 채용 언어로 한 단락</h3>
+<pre><code>오늘 내가 한 전처리 과정을 채용 담당자가 읽을 한 단락으로 정리해줘.
+
+- 어떤 문제가 있었고 (17개 컬럼, 숨은 결측, 종별 이상치)
+- 어떤 판단으로 어떻게 처리했고
+- 그 결과 무엇이 좋아졌는지
+
+전문용어는 최소화하고, 판단 근거가 드러나게 써줘.
+outputs/day2/ 에 저장해줘.
+</code></pre>
+<blockquote>
+<p>💡 <strong>심화 3은 모든 분께 권합니다.</strong> 이 한 단락이 그대로 포트폴리오에 들어갑니다.<br />
+특히 <strong><code>.</code> 을 찾아낸 것</strong>은 아주 좋은 소재입니다.</p>
+</blockquote>
+<hr />
+<h1 id="_27">내 업무로 시켜보기</h1>
+<pre><code>내 업무 데이터에도 빠진 값이나 이상한 값이 있을 것 같아.
+[내 업무 설명]
+
+오늘 배운 것처럼
+- 결측치 개수만 보면 놓치는 값
+- 전체로 보면 안 보이는 이상치
+
+이런 걸 점검하는 체크리스트를 만들어줘.
+그리고 그 점검을 자동으로 해주는 지시문도 하나 써줘.
+</code></pre>
+<blockquote>
+<p>⚠️ <strong>개인정보·기밀은 빼고</strong> 가져오세요.</p>
+</blockquote>
+<hr />
+<h1 id="1_2">오늘의 1건</h1>
+<pre><code>Day2  오늘 시킨 것 / 된 것: ______________________________
+</code></pre>
+<ul>
+<li><em>"성별 컬럼에 점(.)이 숨어 있는 걸 찾았다. 결측 개수만 보면 못 찾는 거였다"</em></li>
+<li><em>"이상치가 0개인 줄 알았는데 종별로 나누니 6개 나왔다"</em></li>
+<li><em>"메모 컬럼에 결측 이유가 적혀 있어서 그걸 근거로 처리 방법을 정했다"</em></li>
+</ul>
+<hr />
+<h2 id="18">다음 시간 (18차시)</h2>
+<p>오늘 만든 정제본으로 <strong>체중을 예측하는 모델</strong>을 만듭니다.<br />
+모델 3종을 비교하고, <strong>어느 게 더 나은지 클로드에게 판단시킵니다.</strong></p>
+<blockquote>
+<p>🤔 <strong>미리 생각해 보세요</strong> — 복잡한 모델이 항상 더 좋을까요?</p>
+</blockquote>
+</main>
+<nav class="toc"><div class="toctitle">목차</div><div class="toc">
+<ul>
+<li><a href="#17-day-2">17차시 · Day 2</a><ul>
+<li><a href="#_1">전처리와 시각화 — 「숨겨진 패턴을 찾아라」</a></li>
+<li><a href="#_2">어제 보신 건 이미 정리된 데이터였습니다</a><ul>
+<li><a href="#_3">실무에서 받는 데이터는 오늘 것에 가깝습니다.</a></li>
+</ul>
+</li>
+<li><a href="#3">그림 3장 — 오늘의 버전</a></li>
+<li><a href="#_4">오늘 끝나면</a></li>
+<li><a href="#3_1">오늘 꼭 기억할 3가지</a></li>
+</ul>
+</li>
+<li><a href="#_5">시작하기</a></li>
+<li><a href="#1-1">1부 · 이론 (1시간)</a><ul>
+<li><a href="#a">A · 빠진 값을 어떻게 할까</a><ul>
+<li><a href="#4">방법은 크게 4가지</a></li>
+<li><a href="#_6">🔴 그런데 오늘 더 중요한 건 이겁니다</a></li>
+<li><a href="#_7">"어떻게 채울까" 보다 "왜 비었을까" 가 먼저입니다.</a></li>
+</ul>
+</li>
+<li><a href="#b">B · 튀는 값을 어떻게 할까</a><ul>
+<li><a href="#outlier">이상치(outlier) = 다른 값들과 유난히 동떨어진 값</a></li>
+<li><a href="#_8">🔴 찾은 다음이 진짜입니다</a></li>
+<li><a href="#_9">이 구분은 클로드가 못 합니다.</a></li>
+</ul>
+</li>
+<li><a href="#c">C · 어떤 그래프를 언제 쓰나</a></li>
+<li><a href="#d-5">D · 클로드가 만든 코드, 5분 읽기법</a><ul>
+<li><a href="#1">① 맨 위 — 무슨 도구를 썼나</a></li>
+<li><a href="#2">② 파일을 읽는 줄 — 어느 파일을 열었나 ⭐</a></li>
+<li><a href="#raw-processed">🔴 raw 를 읽었나 processed 를 읽었나? 엉뚱한 파일이면 뒤는 전부 틀립니다.</a></li>
+<li><a href="#3_2">③ 저장하는 줄 — 어디에 썼나 ⭐</a></li>
+<li><a href="#dataraw">🔴 data/raw/ 에 쓰고 있으면 즉시 중단. 원본을 덮어씁니다.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#2-4">2부 · 실습 「숨겨진 패턴을 찾아라」 (4시간)</a><ul>
+<li><a href="#1-17">실습 1 · 원본 훑어보기 — 17개 컬럼에서 쓸 것 고르기</a><ul>
+<li><a href="#_10">🔍 이제 여러분이 판단합니다</a></li>
+</ul>
+</li>
+<li><a href="#2_1">실습 2 · 컬럼 이름 정리</a></li>
+<li><a href="#3_3">실습 3 · 결측치 — 개수만 믿으면 속습니다 ⭐</a><ul>
+<li><a href="#_11">먼저 평범하게 세어봅니다</a></li>
+<li><a href="#_12">이제 실제 값을 봅니다</a></li>
+<li><a href="#_13">🔴 점(.) 이 하나 있습니다.</a></li>
+<li><a href="#_14">무슨 일이 일어난 걸까요</a></li>
+<li><a href="#_15">💡 . 은 "빈칸"이 아니라 "점이라는 글자"입니다.</a></li>
+</ul>
+</li>
+<li><a href="#4_1">실습 4 · 왜 비었을까 — 메모 컬럼 읽기 ⭐</a><ul>
+<li><a href="#_16">연결해 봅니다</a></li>
+<li><a href="#_17">🔴 이제 판단하세요</a></li>
+<li><a href="#_18">정답은 없습니다. 그래서 여러분이 정하는 겁니다.</a></li>
+</ul>
+</li>
+<li><a href="#5">실습 5 · 이상치 — 통째로 보면 안 보입니다 ⭐</a><ul>
+<li><a href="#_19">먼저 전체 기준으로 찾아봅니다</a></li>
+<li><a href="#_20">🔍 몇 개 나왔나요?</a></li>
+<li><a href="#_21">"이상치가 없는 깨끗한 데이터네요" — 정말 그럴까요?</a></li>
+<li><a href="#_22">왜 이런 일이</a></li>
+<li><a href="#_23">🔴 찾았으면 판단하세요</a></li>
+</ul>
+</li>
+<li><a href="#6-4">실습 6 · 시각화 4종</a></li>
+<li><a href="#7">실습 7 · 히트맵에서 이상한 것 찾기 ⭐ 오늘의 하이라이트</a><ul>
+<li><a href="#_24">🔍 상식과 반대인 숫자가 하나 있습니다. 찾아보세요.</a></li>
+<li><a href="#_25">💡 오늘 두 번째로 같은 교훈입니다.</a></li>
+</ul>
+</li>
+<li><a href="#8">실습 8 · 내일 쓸 정제본 저장하기</a></li>
+<li><a href="#_26">⚡ 심화 과제</a><ul>
+<li><a href="#1_1">심화 1 · 동위원소 데이터</a></li>
+<li><a href="#2_2">심화 2 · 다변량 이상치</a></li>
+<li><a href="#3_4">심화 3 · 채용 언어로 한 단락</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_27">내 업무로 시켜보기</a></li>
+<li><a href="#1_2">오늘의 1건</a><ul>
+<li><a href="#18">다음 시간 (18차시)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+</div>
+<script>
+document.querySelectorAll('pre').forEach(function(pre){
+  var b=document.createElement('button');
+  b.className='copybtn'; b.textContent='복사';
+  b.onclick=function(){
+    var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+    navigator.clipboard.writeText(t).then(function(){
+      b.textContent='복사됨'; b.classList.add('done');
+      setTimeout(function(){b.textContent='복사'; b.classList.remove('done');},1400);
+    });
+  };
+  pre.appendChild(b);
+});
+var bar=document.getElementById('bar');
+window.addEventListener('scroll',function(){
+  var h=document.documentElement;
+  var p=h.scrollTop/((h.scrollHeight-h.clientHeight)||1)*100;
+  bar.style.width=p+'%';
+});
+</script>
+</body>
+</html>

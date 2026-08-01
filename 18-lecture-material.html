@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>18차시 · Day 3</title>
+<style>
+:root{
+  --bg:#ffffff; --fg:#1a1a2e; --muted:#5b6474; --line:#e3e6ec;
+  --accent:#4A90D9; --accent-soft:#eaf2fb;
+  --cta:#F5A623; --code-bg:#1a1a2e; --code-fg:#e8ecf4;
+  --ok:#1f8a4c; --ok-soft:#e8f6ee; --warn:#b3541e; --warn-soft:#fdf1e6;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font-family:"Pretendard","Pretendard Variable","Malgun Gothic","맑은 고딕",
+              -apple-system,"Segoe UI",system-ui,sans-serif;
+  font-size:19px; line-height:1.75; word-break:keep-all;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px;display:flex;gap:36px}
+main{flex:1;min-width:0;padding:48px 0 140px}
+h1,h2,h3{line-height:1.3;word-break:keep-all}
+h1{
+  font-size:2.15em;margin:2.4em 0 .5em;padding-bottom:.35em;
+  border-bottom:4px solid var(--accent);
+}
+h1:first-of-type{margin-top:.2em}
+h2{font-size:1.5em;margin:2em 0 .6em;color:#22304a}
+h3{font-size:1.16em;margin:1.6em 0 .4em;color:#33405c}
+p{margin:.85em 0}
+hr{border:0;border-top:1px solid var(--line);margin:2.6em 0}
+a{color:var(--accent)}
+strong{font-weight:700}
+ul,ol{padding-left:1.5em}
+li{margin:.35em 0}
+
+/* 인용 = 팁/강조 */
+blockquote{
+  margin:1.4em 0; padding:1em 1.3em;
+  background:var(--accent-soft); border-left:5px solid var(--accent);
+  border-radius:0 10px 10px 0; color:#233;
+}
+blockquote p{margin:.4em 0}
+blockquote h3{margin:.2em 0;font-size:1.25em;color:#123}
+
+/* 코드 */
+pre{
+  position:relative; background:var(--code-bg); color:var(--code-fg);
+  padding:1.15em 1.3em; border-radius:12px; overflow-x:auto;
+  font-size:1.02em; line-height:1.65; margin:1.1em 0;
+  box-shadow:0 2px 14px rgba(26,26,46,.16);
+}
+pre code{
+  font-family:"D2Coding","Cascadia Mono","Consolas","Malgun Gothic",monospace;
+  white-space:pre-wrap; word-break:break-word;
+}
+:not(pre)>code{
+  background:#f1f3f7; color:#1a2b45; padding:.15em .45em;
+  border-radius:6px; font-size:.94em;
+  font-family:"D2Coding","Consolas",monospace;
+}
+.copybtn{
+  position:absolute; top:9px; right:10px;
+  background:rgba(255,255,255,.13); color:#fff; border:1px solid rgba(255,255,255,.28);
+  border-radius:7px; padding:5px 12px; font-size:.72em; cursor:pointer;
+  font-family:inherit; letter-spacing:.02em;
+}
+.copybtn:hover{background:rgba(255,255,255,.26)}
+.copybtn.done{background:var(--ok);border-color:var(--ok)}
+
+/* 표 */
+table{border-collapse:collapse;width:100%;margin:1.3em 0;font-size:.97em}
+th,td{border:1px solid var(--line);padding:.6em .8em;text-align:left;vertical-align:top}
+th{background:#f5f7fa;font-weight:700}
+tr:nth-child(even) td{background:#fafbfd}
+
+/* 목차 */
+nav.toc{
+  width:250px;flex:0 0 250px;position:sticky;top:0;align-self:flex-start;
+  max-height:100vh;overflow-y:auto;padding:48px 0 60px;font-size:.86em;
+}
+nav.toc .toctitle{font-weight:700;color:var(--muted);letter-spacing:.06em;margin-bottom:.7em}
+nav.toc ul{list-style:none;padding-left:0;margin:0;border-left:2px solid var(--line)}
+nav.toc ul ul{padding-left:.85em;border:0}
+nav.toc li{margin:0}
+nav.toc a{display:block;padding:.34em .9em;color:var(--muted);text-decoration:none;border-radius:0 6px 6px 0}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+
+/* 진행 바 */
+#bar{position:fixed;top:0;left:0;height:4px;background:var(--cta);width:0;z-index:99}
+
+@media (max-width:1000px){
+  nav.toc{display:none}
+  body{font-size:17px}
+  .wrap{padding:0 18px}
+}
+@media print{
+  nav.toc,.copybtn,#bar{display:none}
+  body{font-size:11pt}
+  pre{background:#f4f5f8;color:#111;box-shadow:none;border:1px solid #ccc}
+  h1{page-break-before:always}
+  h1:first-of-type{page-break-before:avoid}
+}
+</style>
+<link rel="stylesheet" href="meta-redesign.css">
+</head>
+<body>
+<div id="bar"></div>
+<div class="wrap">
+<main>
+<h1 id="18-day-3">18차시 · Day 3</h1>
+<h2 id="_1">회귀 모델 — 「부리만 보고 체중을 맞혀라」</h2>
+<blockquote>
+<p><strong>오늘 할 일 — 딱 하나</strong><br />
+<strong>재본 적 없는 펭귄의 체중을, 다른 측정값만으로 맞혀본다.</strong></p>
+</blockquote>
+<p>어제까지는 <strong>있는 데이터를 들여다봤습니다.</strong><br />
+오늘은 <strong>없는 값을 만들어냅니다.</strong> 그게 예측입니다.</p>
+<hr />
+<h2 id="3">그림 3장 — 오늘의 버전</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>① 3자 분업</strong></td>
+<td>모델 만드는 건 클로드가, <strong>"이 결과를 믿어도 되나" 판단은 여러분이</strong></td>
+</tr>
+<tr>
+<td><strong>② 에이전트</strong></td>
+<td>오늘은 <strong>회귀 에이전트</strong>를 만듭니다 — 데이터를 넣으면 예측과 해석까지 나오는</td>
+</tr>
+<tr>
+<td><strong>③ IPO</strong></td>
+<td><strong>I</strong> 부리·날개·종 → <strong>P</strong> 모델 학습·평가 → <strong>O</strong> 예측값 + 성능표 + 설명 한 단락</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_2">오늘 끝나면</h2>
+<ul>
+<li><strong>회귀</strong>가 무엇인지 한 문장으로 설명할 수 있습니다</li>
+<li>모델 <strong>3종을 비교</strong>하고 어느 게 나은지 근거를 댈 수 있습니다</li>
+<li><strong>RMSE·R²</strong> 를 남에게 설명할 수 있습니다</li>
+<li>어떤 변수가 중요했는지 <strong>그림으로 보여줄</strong> 수 있습니다</li>
+<li>결과를 <strong>채용 담당자가 읽을 한 단락</strong>으로 정리합니다</li>
+</ul>
+<h2 id="3_1">오늘 꼭 기억할 3가지</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>📏</td>
+<td><strong>모델은 "맞다/틀리다"가 아니라 "얼마나 빗나갔나"</strong></td>
+</tr>
+<tr>
+<td>🎯</td>
+<td><strong>복잡한 모델이 항상 좋은 건 아니다</strong></td>
+</tr>
+<tr>
+<td>🗣</td>
+<td><strong>설명할 수 없는 결과는 포트폴리오에 못 쓴다</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="_3">시작하기</h1>
+<p>바탕화면 → <code>claude-lab</code> → <code>my-project</code> → 주소창 <code>powershell</code> → <code>claude</code></p>
+<pre><code>outputs/ 안에 day3 폴더를 만들고,
+data/processed/ 에 어제 만든 파일들이 뭐가 있는지 보여줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — 어제 만든 정제본이 보입니다. <strong>오늘은 이걸 씁니다.</strong></p>
+<blockquote>
+<p>💡 어제 여러 버전을 만드셨다면 <strong>어느 걸 쓸지 지금 정하세요.</strong><br />
+모르겠으면 → <code>이 파일들 중에 모델 학습에 쓰기 가장 적합한 게 뭔지, 이유와 함께 알려줘</code></p>
+</blockquote>
+<hr />
+<h1 id="1-1">1부 · 이론 (1시간)</h1>
+<hr />
+<h2 id="a">A · 회귀란 무엇인가 — 한 문장</h2>
+<blockquote>
+<h3 id="_4"><strong>여러 값을 보고 숫자 하나를 맞히는 것.</strong></h3>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>예</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>부리·날개·종을 보고 → <strong>체중</strong>을 맞힌다</td>
+<td>오늘 할 것</td>
+</tr>
+<tr>
+<td>날씨·요일을 보고 → <strong>자전거 대여 수</strong>를 맞힌다</td>
+<td>4주차</td>
+</tr>
+<tr>
+<td>실험 조건을 보고 → <strong>수율</strong>을 맞힌다</td>
+<td><strong>여러분 업무</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="_5">어제와 무엇이 다른가</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>어제 (EDA)</th>
+<th><strong>오늘 (회귀)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>하는 일</td>
+<td>있는 걸 <strong>들여다본다</strong></td>
+<td>없는 걸 <strong>만들어낸다</strong></td>
+</tr>
+<tr>
+<td>결과</td>
+<td>표·그래프</td>
+<td><strong>예측값 + 얼마나 정확한지</strong></td>
+</tr>
+<tr>
+<td>질문</td>
+<td><em>"어떻게 생겼나?"</em></td>
+<td><em>"이 펭귄은 몇 g일까?"</em></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="b">B · 감으로 하던 걸 에이전트에게 맡긴다</h2>
+<blockquote>
+<p>여러분 업무에도 <strong>"대충 이 정도 나오겠지"</strong> 하고 감으로 잡는 숫자가 있을 겁니다.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>이런 것들</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>"이 조건이면 수율이 얼마쯤"</em></td>
+<td>실험·공정</td>
+</tr>
+<tr>
+<td><em>"이만한 규모면 며칠쯤"</em></td>
+<td>일정 산정</td>
+</tr>
+<tr>
+<td><em>"이 정도 샘플이면 값이 이쯤"</em></td>
+<td>측정·분석</td>
+</tr>
+</tbody>
+</table>
+<p><strong>감으로 하던 것을 → 데이터로 바꾸고 → 근거를 붙이는 것.</strong> 오늘 배우는 게 그겁니다.</p>
+<blockquote>
+<p>🤔 <strong>잠깐 생각해 보세요.</strong> 내 업무에서 "감으로 잡는 숫자"는 뭐가 있나요? 카드에 적어두세요.</p>
+</blockquote>
+<hr />
+<h2 id="c-3">C · 클로드에게 회귀를 시키는 프롬프트 3종</h2>
+<blockquote>
+<p>오늘 쓸 프롬프트는 결국 이 세 가지 패턴입니다.</p>
+</blockquote>
+<h3 id="1">패턴 ① 모델 선택을 위임한다</h3>
+<pre><code>이 데이터로 [무엇]을 예측하려고 해.
+어떤 모델이 적합할지 2~3개 추천하고, 각각의 장단점을 알려줘.
+</code></pre>
+<blockquote>
+<p>💡 <strong>모델 이름을 몰라도 됩니다.</strong> 고르는 것부터 맡깁니다.</p>
+</blockquote>
+<h3 id="2">패턴 ② 결과 해석을 요청한다</h3>
+<pre><code>이 결과가 좋은 건지 나쁜 건지,
+채용 담당자에게 설명할 언어로 알려줘.
+</code></pre>
+<blockquote>
+<p>💡 <strong>숫자만 받으면 쓸모가 없습니다.</strong> 항상 "이게 무슨 뜻인지"를 함께 시킵니다.</p>
+</blockquote>
+<h3 id="3_2">패턴 ③ 시각화를 요청한다</h3>
+<pre><code>이 결과를 한눈에 보여주는 그래프를 그려서
+outputs/day3/ 에 저장하고, 뭘 보여주는 그림인지 설명해줘.
+</code></pre>
+<hr />
+<h2 id="d-3">D · 평가지표 3개 — 이것만 알면 됩니다</h2>
+<table>
+<thead>
+<tr>
+<th>지표</th>
+<th>한 문장</th>
+<th>좋은 쪽</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RMSE</strong></td>
+<td><strong>평균 몇 그램 빗나갔나</strong></td>
+<td>작을수록</td>
+</tr>
+<tr>
+<td><strong>MAE</strong></td>
+<td>평균 몇 그램 틀렸나 (RMSE보다 순한 버전)</td>
+<td>작을수록</td>
+</tr>
+<tr>
+<td><strong>R²</strong></td>
+<td><strong>체중 변동의 몇 %를 설명했나</strong></td>
+<td>1에 가까울수록</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_6">읽는 법</h3>
+<blockquote>
+<p><strong>RMSE = 250g</strong> 이라면?<br />
+펭귄 평균 체중이 약 <strong>4,200g</strong> 입니다. → <strong>약 6% 빗나갔다</strong>는 뜻입니다.</p>
+<p><strong>R² = 0.9</strong> 라면?<br />
+체중이 왜 다른지를 <strong>90% 설명했다</strong>는 뜻입니다.</p>
+<h3 id="_7">🔴 <strong>숫자만 외우지 마세요. 항상 "무엇 대비"인지 같이 보세요.</strong></h3>
+<p>RMSE 250g 은 펭귄(4kg)에서는 훌륭하지만, 참새 무게를 맞히는 거라면 <strong>완전 실패</strong>입니다.</p>
+</blockquote>
+<p><strong>모르겠으면 그냥 물어보세요</strong></p>
+<pre><code>RMSE가 [숫자] 나왔어. 이게 좋은 건지 나쁜 건지
+데이터의 평균이랑 비교해서 설명해줘.
+</code></pre>
+<hr />
+<h1 id="2-3">2부 · 실습 「부리만 보고 체중을 맞혀라」 (3시간)</h1>
+<blockquote>
+<p><strong>기본 과제는 실습 1~5까지.</strong></p>
+</blockquote>
+<hr />
+<h2 id="1_1">실습 1 · 예측 문제 정의하기</h2>
+<blockquote>
+<p>코드보다 <strong>먼저 할 일</strong>입니다.</p>
+</blockquote>
+<pre><code>data/processed/[어제 만든 파일] 로 체중(body_mass_g)을 예측하려고 해.
+
+1) 무엇을 맞히는 문제인지 한 문장으로 정리해줘
+2) 어떤 변수를 입력으로 쓰면 좋을지 추천하고 이유를 알려줘
+3) 종(species)처럼 글자로 된 변수는 어떻게 처리해야 하는지 알려줘
+
+아직 모델은 만들지 말고, 계획만 정리해줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — 계획이 나옵니다. <strong>아직 아무것도 안 만들어졌습니다.</strong></p>
+<blockquote>
+<p>🤔 <strong>글자 변수는 어떻게 숫자가 될까요?</strong> 답을 읽어보세요. 어렵지 않습니다.</p>
+</blockquote>
+<hr />
+<h2 id="2_1">실습 2 · 첫 모델 만들기</h2>
+<pre><code>계획대로 선형회귀(Linear Regression) 모델을 만들어줘.
+
+- 학습용과 검증용으로 나눠서 (8:2)
+- 검증 데이터에서 RMSE, MAE, R²를 계산해서 보여줘
+- 몇 개로 학습했고 몇 개로 검증했는지도 알려줘
+- 코드는 scripts/ 에 저장해줘
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — 지표 3개 + <strong>학습/검증 개수</strong>가 나옵니다.</p>
+<blockquote>
+<p>⚠️ <strong>개수를 꼭 확인하세요.</strong> 어제 정제한 결과에 따라 달라집니다.</p>
+</blockquote>
+<p><strong>결과가 나오면 바로 물어보세요 (패턴 ②)</strong></p>
+<pre><code>이 결과가 좋은 건지 나쁜 건지,
+펭귄 체중의 평균·범위와 비교해서 설명해줘.
+</code></pre>
+<hr />
+<h2 id="3-3">실습 3 · 모델 3종 비교 ⭐</h2>
+<pre><code>같은 데이터로 아래 3가지 모델을 만들어서 성능을 비교표로 만들어줘.
+
+1) 선형회귀 (Linear Regression)
+2) 랜덤포레스트 (Random Forest)
+3) XGBoost
+
+- 같은 학습/검증 데이터를 쓸 것
+- RMSE, MAE, R²를 한 표에 나란히
+- 어느 모델이 가장 나은지, 왜 그런지 설명해줘
+
+결과 표는 outputs/day3/ 에도 저장해줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — 3행짜리 비교표.</p>
+<h3 id="_8">🔍 결과를 보고 놀라실 겁니다</h3>
+<blockquote>
+<h3 id="_9"><strong>가장 단순한 모델이 이길 수 있습니다.</strong></h3>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>왜 그럴까</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>데이터가 <strong>작다</strong> (300여 개)</td>
+<td>복잡한 모델은 배울 게 부족합니다</td>
+</tr>
+<tr>
+<td>관계가 <strong>단순하다</strong></td>
+<td>날개가 길수록 무겁다 — 거의 직선입니다</td>
+</tr>
+<tr>
+<td>복잡한 모델은 <strong>외워버린다</strong></td>
+<td>학습 데이터는 잘 맞히는데 새 데이터에서 틀립니다</td>
+</tr>
+</tbody>
+</table>
+<p><strong>클로드에게 물어보세요</strong></p>
+<pre><code>가장 단순한 모델이 더 좋은 성능을 냈어. 왜 그럴까?
+그리고 이런 경우에 어떤 모델을 골라야 하는지 알려줘.
+</code></pre>
+<blockquote>
+<p>💡 <strong>이게 오늘 가장 중요한 발견입니다.</strong><br />
+<em>"최신 모델을 썼습니다"</em> 보다 <strong><em>"왜 이 모델을 골랐는지 설명할 수 있습니다"</em></strong> 가 훨씬 강합니다.</p>
+</blockquote>
+<hr />
+<h2 id="4">실습 4 · 예측 결과 시각화</h2>
+<pre><code>가장 좋았던 모델의 예측 결과를 그래프로 그려줘.
+
+1) 실제 체중 vs 예측 체중 산점도 (대각선 기준선 포함)
+2) 얼마나 빗나갔는지 분포 그래프
+
+outputs/day3/ 에 저장하고,
+각 그래프가 무엇을 보여주는지 한 줄씩 설명해줘.
+한글 폰트 설정해줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — 점들이 <strong>대각선 근처에 몰려</strong> 있습니다.</p>
+<h3 id="_10">그림 읽는 법</h3>
+<table>
+<thead>
+<tr>
+<th>보이는 것</th>
+<th>뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>점이 대각선에 딱 붙어 있다</td>
+<td><strong>잘 맞혔다</strong></td>
+</tr>
+<tr>
+<td>점이 위아래로 넓게 퍼져 있다</td>
+<td>많이 빗나갔다</td>
+</tr>
+<tr>
+<td><strong>한쪽으로 치우쳐 있다</strong></td>
+<td>⚠️ 특정 구간에서 계속 틀린다 — <strong>문제 있음</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>🔍 <strong>무거운 펭귄들에서 유독 많이 빗나가지 않았나요?</strong> 그렇다면 그게 발견입니다.</p>
+</blockquote>
+<hr />
+<h2 id="5">실습 5 · 무엇이 중요했나 (변수 중요도)</h2>
+<pre><code>모델이 어떤 변수를 중요하게 봤는지 순서대로 보여주고,
+막대그래프로 그려서 outputs/day3/ 에 저장해줘.
+
+그리고 1~2위 변수가 왜 중요한지,
+상식적으로 말이 되는지도 판단해줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — 변수 순위 + 막대그래프.</p>
+<h3 id="_11">🔴 여기서 여러분이 판단합니다</h3>
+<pre><code>□ 1위 변수가 상식적으로 말이 되는가?
+□ 어제 히트맵에서 본 것과 일치하는가?
+□ 전혀 관계없어 보이는 변수가 높게 나오지 않았나?
+</code></pre>
+<blockquote>
+<h3 id="_12"><strong>말이 안 되면 모델이 아니라 데이터를 의심하세요.</strong></h3>
+<p>이게 어제 배운 <strong>검증하는 감각</strong>입니다.</p>
+<p>💡 어제 실습 7에서 "체중 예측에 쓸 변수"를 골라보셨죠. <strong>그 예상과 맞았나요?</strong></p>
+</blockquote>
+<hr />
+<h2 id="_13">⚡ 심화 과제</h2>
+<h3 id="1_2">심화 1 · 네 번째 모델</h3>
+<pre><code>앞의 3종 외에 이 데이터에 잘 맞을 만한 모델을 하나 더 추천하고,
+같은 조건으로 학습해서 비교표에 추가해줘.
+왜 그 모델을 골랐는지도 설명해줘.
+</code></pre>
+<h3 id="2_2">심화 2 · 교차검증 맛보기</h3>
+<pre><code>지금은 데이터를 한 번만 나눠서 평가했어.
+나누는 방식에 따라 결과가 얼마나 달라지는지
+5-fold 교차검증으로 확인해줘.
+
+평균 성능과 함께, 편차가 큰지 작은지도 알려줘.
+</code></pre>
+<blockquote>
+<p>💡 <strong>왜 하나요?</strong> 한 번 나눈 결과는 <strong>운</strong>일 수 있습니다. 여러 번 나눠 평균을 보면 더 믿을 만합니다.</p>
+</blockquote>
+<h3 id="3_3">심화 3 · 재사용 가능한 스크립트</h3>
+<pre><code>오늘 한 작업을 처음부터 끝까지 다시 실행할 수 있는
+파이썬 스크립트 하나로 정리해서 scripts/ 에 저장해줘.
+주석은 한글로, 파일 경로는 맨 위에 모아줘.
+</code></pre>
+<blockquote>
+<p>💡 <strong>다음 주에 자전거 데이터로 이걸 그대로 씁니다.</strong> 잘 만들어두면 그때 편합니다.</p>
+</blockquote>
+<hr />
+<h1 id="_14">사례집에 올릴 한 단락 ⭐</h1>
+<blockquote>
+<p><strong>오늘 결과를 포트폴리오 언어로 바꿉니다. 모든 분이 하세요.</strong></p>
+</blockquote>
+<pre><code>오늘 만든 체중 예측 모델을 채용 담당자가 읽을 한 단락으로 정리해줘.
+
+포함할 것:
+- 어떤 문제를 풀었는지
+- 어떤 모델들을 비교했고 왜 이걸 골랐는지
+- 성능이 어느 정도인지 (일상 언어로)
+- 어떤 변수가 중요했고 그게 말이 되는지
+
+전문용어는 최소화하고, 판단 근거가 드러나게.
+outputs/day3/ 에 저장해줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — 읽어보고 <strong>내가 남에게 말할 수 있는 문장</strong>이면 성공.</p>
+<blockquote>
+<p>⚠️ <strong>그대로 복사해 붙이지 마세요.</strong> 읽어보고 <strong>내 말로 고치세요.</strong><br />
+면접에서 질문받는 건 클로드가 아니라 여러분입니다.</p>
+</blockquote>
+<hr />
+<h1 id="_15">내 업무로 시켜보기</h1>
+<pre><code>내 업무에서 &quot;감으로 잡는 숫자&quot;가 있어.
+[무엇을 예측하고 싶은지]
+
+이걸 예측 모델로 만들려면
+- 어떤 데이터를 모아야 하는지
+- 몇 건 정도 필요한지
+- 첫 단계로 뭘 하면 되는지
+
+순서대로 알려줘.
+</code></pre>
+<blockquote>
+<p>💡 <strong>"데이터가 없는데요"</strong> 도 답입니다. <strong>뭘 모아야 하는지 아는 것</strong>부터가 시작입니다.</p>
+</blockquote>
+<hr />
+<h1 id="3-1">3부 · 공유와 회고 (1시간)</h1>
+<h2 id="1-notion">① Notion 갤러리에 올리기</h2>
+<pre><code>□ 모델 3종 비교표
+□ 예측 결과 그래프 1장
+□ 변수 중요도 그래프 1장
+□ 사례집 한 단락
+</code></pre>
+<h2 id="2-2">② 발표 — 한 사람당 2분</h2>
+<pre><code>□ 나는 무엇을 예측했나
+□ 어떤 모델을 골랐고, 왜 골랐나
+□ 결과를 한 문장으로
+</code></pre>
+<blockquote>
+<p>💡 <strong>"왜 골랐나"가 핵심입니다.</strong> 성능 숫자보다 <strong>판단 근거</strong>를 말하세요.</p>
+</blockquote>
+<h2 id="3-1_1">③ 오늘의 1건</h2>
+<pre><code>Day3  오늘 시킨 것 / 된 것: ______________________________
+</code></pre>
+<ul>
+<li><em>"모델 3개 비교했더니 제일 단순한 게 이겼다. 이유도 설명 들었다"</em></li>
+<li><em>"변수 중요도 뽑아보니 종이 제일 중요했다 — 어제 본 거랑 맞았다"</em></li>
+<li><em>"내 업무에서 예측할 숫자를 하나 정했다"</em></li>
+</ul>
+<hr />
+<h2 id="7">다음 주 (7주차) 안내</h2>
+<p><strong>자전거 대여 데이터</strong>로 갑니다. 완전히 다른 도메인입니다.</p>
+<blockquote>
+<h3 id="_16">그런데 <strong>오늘 만든 워크플로우를 그대로</strong> 씁니다.</h3>
+<p><em>"내 분야 데이터도 똑같이 되는구나"</em> 를 체감하는 게 다음 주 목표입니다.</p>
+</blockquote>
+<p><strong>숙제 — 다음 주까지 생각해 오세요</strong></p>
+<pre><code>□ 내 도메인 데이터 후보 1~2개
+   (회사·연구실 데이터 / 공개 데이터 / 관심 분야 데이터)
+□ 없으면 &quot;어떤 걸 분석하고 싶은지&quot;만 정해 오셔도 됩니다
+</code></pre>
+</main>
+<nav class="toc"><div class="toctitle">목차</div><div class="toc">
+<ul>
+<li><a href="#18-day-3">18차시 · Day 3</a><ul>
+<li><a href="#_1">회귀 모델 — 「부리만 보고 체중을 맞혀라」</a></li>
+<li><a href="#3">그림 3장 — 오늘의 버전</a></li>
+<li><a href="#_2">오늘 끝나면</a></li>
+<li><a href="#3_1">오늘 꼭 기억할 3가지</a></li>
+</ul>
+</li>
+<li><a href="#_3">시작하기</a></li>
+<li><a href="#1-1">1부 · 이론 (1시간)</a><ul>
+<li><a href="#a">A · 회귀란 무엇인가 — 한 문장</a><ul>
+<li><a href="#_4">여러 값을 보고 숫자 하나를 맞히는 것.</a></li>
+<li><a href="#_5">어제와 무엇이 다른가</a></li>
+</ul>
+</li>
+<li><a href="#b">B · 감으로 하던 걸 에이전트에게 맡긴다</a></li>
+<li><a href="#c-3">C · 클로드에게 회귀를 시키는 프롬프트 3종</a><ul>
+<li><a href="#1">패턴 ① 모델 선택을 위임한다</a></li>
+<li><a href="#2">패턴 ② 결과 해석을 요청한다</a></li>
+<li><a href="#3_2">패턴 ③ 시각화를 요청한다</a></li>
+</ul>
+</li>
+<li><a href="#d-3">D · 평가지표 3개 — 이것만 알면 됩니다</a><ul>
+<li><a href="#_6">읽는 법</a></li>
+<li><a href="#_7">🔴 숫자만 외우지 마세요. 항상 "무엇 대비"인지 같이 보세요.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#2-3">2부 · 실습 「부리만 보고 체중을 맞혀라」 (3시간)</a><ul>
+<li><a href="#1_1">실습 1 · 예측 문제 정의하기</a></li>
+<li><a href="#2_1">실습 2 · 첫 모델 만들기</a></li>
+<li><a href="#3-3">실습 3 · 모델 3종 비교 ⭐</a><ul>
+<li><a href="#_8">🔍 결과를 보고 놀라실 겁니다</a></li>
+<li><a href="#_9">가장 단순한 모델이 이길 수 있습니다.</a></li>
+</ul>
+</li>
+<li><a href="#4">실습 4 · 예측 결과 시각화</a><ul>
+<li><a href="#_10">그림 읽는 법</a></li>
+</ul>
+</li>
+<li><a href="#5">실습 5 · 무엇이 중요했나 (변수 중요도)</a><ul>
+<li><a href="#_11">🔴 여기서 여러분이 판단합니다</a></li>
+<li><a href="#_12">말이 안 되면 모델이 아니라 데이터를 의심하세요.</a></li>
+</ul>
+</li>
+<li><a href="#_13">⚡ 심화 과제</a><ul>
+<li><a href="#1_2">심화 1 · 네 번째 모델</a></li>
+<li><a href="#2_2">심화 2 · 교차검증 맛보기</a></li>
+<li><a href="#3_3">심화 3 · 재사용 가능한 스크립트</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_14">사례집에 올릴 한 단락 ⭐</a></li>
+<li><a href="#_15">내 업무로 시켜보기</a></li>
+<li><a href="#3-1">3부 · 공유와 회고 (1시간)</a><ul>
+<li><a href="#1-notion">① Notion 갤러리에 올리기</a></li>
+<li><a href="#2-2">② 발표 — 한 사람당 2분</a></li>
+<li><a href="#3-1_1">③ 오늘의 1건</a></li>
+<li><a href="#7">다음 주 (7주차) 안내</a><ul>
+<li><a href="#_16">그런데 오늘 만든 워크플로우를 그대로 씁니다.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+</div>
+<script>
+document.querySelectorAll('pre').forEach(function(pre){
+  var b=document.createElement('button');
+  b.className='copybtn'; b.textContent='복사';
+  b.onclick=function(){
+    var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+    navigator.clipboard.writeText(t).then(function(){
+      b.textContent='복사됨'; b.classList.add('done');
+      setTimeout(function(){b.textContent='복사'; b.classList.remove('done');},1400);
+    });
+  };
+  pre.appendChild(b);
+});
+var bar=document.getElementById('bar');
+window.addEventListener('scroll',function(){
+  var h=document.documentElement;
+  var p=h.scrollTop/((h.scrollHeight-h.clientHeight)||1)*100;
+  bar.style.width=p+'%';
+});
+</script>
+</body>
+</html>

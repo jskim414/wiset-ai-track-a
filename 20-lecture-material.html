@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>20차시 · Day 5</title>
+<style>
+:root{
+  --bg:#ffffff; --fg:#1a1a2e; --muted:#5b6474; --line:#e3e6ec;
+  --accent:#4A90D9; --accent-soft:#eaf2fb;
+  --cta:#F5A623; --code-bg:#1a1a2e; --code-fg:#e8ecf4;
+  --ok:#1f8a4c; --ok-soft:#e8f6ee; --warn:#b3541e; --warn-soft:#fdf1e6;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font-family:"Pretendard","Pretendard Variable","Malgun Gothic","맑은 고딕",
+              -apple-system,"Segoe UI",system-ui,sans-serif;
+  font-size:19px; line-height:1.75; word-break:keep-all;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px;display:flex;gap:36px}
+main{flex:1;min-width:0;padding:48px 0 140px}
+h1,h2,h3{line-height:1.3;word-break:keep-all}
+h1{
+  font-size:2.15em;margin:2.4em 0 .5em;padding-bottom:.35em;
+  border-bottom:4px solid var(--accent);
+}
+h1:first-of-type{margin-top:.2em}
+h2{font-size:1.5em;margin:2em 0 .6em;color:#22304a}
+h3{font-size:1.16em;margin:1.6em 0 .4em;color:#33405c}
+p{margin:.85em 0}
+hr{border:0;border-top:1px solid var(--line);margin:2.6em 0}
+a{color:var(--accent)}
+strong{font-weight:700}
+ul,ol{padding-left:1.5em}
+li{margin:.35em 0}
+
+/* 인용 = 팁/강조 */
+blockquote{
+  margin:1.4em 0; padding:1em 1.3em;
+  background:var(--accent-soft); border-left:5px solid var(--accent);
+  border-radius:0 10px 10px 0; color:#233;
+}
+blockquote p{margin:.4em 0}
+blockquote h3{margin:.2em 0;font-size:1.25em;color:#123}
+
+/* 코드 */
+pre{
+  position:relative; background:var(--code-bg); color:var(--code-fg);
+  padding:1.15em 1.3em; border-radius:12px; overflow-x:auto;
+  font-size:1.02em; line-height:1.65; margin:1.1em 0;
+  box-shadow:0 2px 14px rgba(26,26,46,.16);
+}
+pre code{
+  font-family:"D2Coding","Cascadia Mono","Consolas","Malgun Gothic",monospace;
+  white-space:pre-wrap; word-break:break-word;
+}
+:not(pre)>code{
+  background:#f1f3f7; color:#1a2b45; padding:.15em .45em;
+  border-radius:6px; font-size:.94em;
+  font-family:"D2Coding","Consolas",monospace;
+}
+.copybtn{
+  position:absolute; top:9px; right:10px;
+  background:rgba(255,255,255,.13); color:#fff; border:1px solid rgba(255,255,255,.28);
+  border-radius:7px; padding:5px 12px; font-size:.72em; cursor:pointer;
+  font-family:inherit; letter-spacing:.02em;
+}
+.copybtn:hover{background:rgba(255,255,255,.26)}
+.copybtn.done{background:var(--ok);border-color:var(--ok)}
+
+/* 표 */
+table{border-collapse:collapse;width:100%;margin:1.3em 0;font-size:.97em}
+th,td{border:1px solid var(--line);padding:.6em .8em;text-align:left;vertical-align:top}
+th{background:#f5f7fa;font-weight:700}
+tr:nth-child(even) td{background:#fafbfd}
+
+/* 목차 */
+nav.toc{
+  width:250px;flex:0 0 250px;position:sticky;top:0;align-self:flex-start;
+  max-height:100vh;overflow-y:auto;padding:48px 0 60px;font-size:.86em;
+}
+nav.toc .toctitle{font-weight:700;color:var(--muted);letter-spacing:.06em;margin-bottom:.7em}
+nav.toc ul{list-style:none;padding-left:0;margin:0;border-left:2px solid var(--line)}
+nav.toc ul ul{padding-left:.85em;border:0}
+nav.toc li{margin:0}
+nav.toc a{display:block;padding:.34em .9em;color:var(--muted);text-decoration:none;border-radius:0 6px 6px 0}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+
+/* 진행 바 */
+#bar{position:fixed;top:0;left:0;height:4px;background:var(--cta);width:0;z-index:99}
+
+@media (max-width:1000px){
+  nav.toc{display:none}
+  body{font-size:17px}
+  .wrap{padding:0 18px}
+}
+@media print{
+  nav.toc,.copybtn,#bar{display:none}
+  body{font-size:11pt}
+  pre{background:#f4f5f8;color:#111;box-shadow:none;border:1px solid #ccc}
+  h1{page-break-before:always}
+  h1:first-of-type{page-break-before:avoid}
+}
+</style>
+<link rel="stylesheet" href="meta-redesign.css">
+</head>
+<body>
+<div id="bar"></div>
+<div class="wrap">
+<main>
+<h1 id="20-day-5">20차시 · Day 5</h1>
+<h2 id="_1">이상탐지 — 「폭우 온 날의 이상 신호」</h2>
+<blockquote>
+<p><strong>오늘 할 일 — 딱 하나</strong><br />
+<strong>2년 731일 중 "평소와 다른 날"을 자동으로 찾아내고, 왜 다른지 설명하게 만든다.</strong></p>
+</blockquote>
+<hr />
+<h2 id="_2">지난 시간 질문부터 회수합니다</h2>
+<blockquote>
+<p>🤔 <em>"모델이 가장 크게 빗나간 날은 언제였을까? 그 날 무슨 일이 있었을까?"</em></p>
+</blockquote>
+<p>오늘 <strong>첫 실습에서 그 날짜를 직접 찾습니다.</strong><br />
+미리 말씀드리면 — 그 날, 워싱턴 D.C.에는 <strong>진짜로 큰일이 있었습니다.</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>지난 시간 (예측)</th>
+<th><strong>오늘 (이상탐지)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>하는 일</td>
+<td>내일을 <strong>맞힌다</strong></td>
+<td>평소와 <strong>어긋난 것을 찾는다</strong></td>
+</tr>
+<tr>
+<td>질문</td>
+<td><em>"내일 몇 대나 빌릴까?"</em></td>
+<td><em>"이 날, 뭔가 이상하지 않았나?"</em></td>
+</tr>
+<tr>
+<td>여러분 업무로 치면</td>
+<td>수율·수요·값 예측</td>
+<td><strong>측정값 튐 · 배치 편차 · 오류 감지</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3">그림 3장 — 오늘의 버전</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>① 3자 분업</strong></td>
+<td>찾는 건 클로드가, <strong>"진짜 사건인가, 측정 오류인가" 판단은 여러분이</strong> — Day 2에 배운 그 원칙입니다</td>
+</tr>
+<tr>
+<td><strong>② 에이전트</strong></td>
+<td>오늘 만드는 건 <strong>감시 에이전트</strong> — 이상을 찾고, <strong>왜 이상한지 보고서까지</strong> 쓰게 합니다</td>
+</tr>
+<tr>
+<td><strong>③ IPO</strong></td>
+<td><strong>I</strong> 2년치 운영 기록 → <strong>P</strong> 이상탐지 + 원인 연결 → <strong>O</strong> 이상한 날 목록 + 설명</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_3">오늘 끝나면</h2>
+<ul>
+<li>눈으로 하던 이상값 체크가 <strong>어떻게 자동화되는지</strong> 압니다</li>
+<li>이상을 찾는 <strong>두 가지 방법</strong>(값이 튀는 날 · 예측이 빗나간 날)을 다 써봅니다</li>
+<li>탐지된 날짜를 <strong>실제 사건과 연결</strong>해 설명합니다</li>
+<li><strong>"다르다"와 "이상하다"를 구분</strong>할 수 있습니다</li>
+<li>측정 오류를 <strong>한 건 직접 잡아냅니다</strong></li>
+</ul>
+<h2 id="3_1">오늘 꼭 기억할 3가지</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🚨</td>
+<td><strong>탐지는 시작이고, 설명이 끝이다</strong> — "찾았다"에서 멈추면 절반이다</td>
+</tr>
+<tr>
+<td>👀</td>
+<td><strong>통계적으로 튄다 ≠ 문제다</strong> — 진짜 사건인지 오류인지는 사람이 정한다</td>
+</tr>
+<tr>
+<td>🔁</td>
+<td><strong>두 방법이 같은 날을 가리키면 진짜다</strong> — 교차 확인이 신뢰를 만든다</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="_4">시작하기</h1>
+<p>바탕화면 → <code>claude-lab</code> → <code>my-project</code> → 주소창 <code>powershell</code> → <code>claude</code></p>
+<pre><code>outputs/ 안에 day5 폴더를 만들고,
+data/raw/day.csv 가 있는지 확인해줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — <code>day.csv</code> 확인. 어제 그 데이터를 오늘도 씁니다.</p>
+<blockquote>
+<p>💡 <strong>사용량 3원칙</strong> — 이론 시간엔 화면만 보기 · 에러는 다시 던지지 말고 원인부터 묻기 · 차시 끝나면 🧹 <code>/clear</code>.<br />
+걸리면 옆자리와 한 화면으로 보시면 됩니다. <strong>전혀 문제없습니다.</strong></p>
+</blockquote>
+<hr />
+<h1 id="1-1">1부 · 이론 (1시간)</h1>
+<hr />
+<h2 id="a">A · 지금 눈으로 하고 계신 그 일</h2>
+<p>이상탐지가 대체하는 업무는, 여러분이 이미 하던 일입니다.</p>
+<table>
+<thead>
+<tr>
+<th>현장</th>
+<th>눈으로 하던 일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🧪 실험실</td>
+<td><em>"이번 배치 측정값이 왜 이렇게 튀지?"</em> — 값을 훑으며 확인</td>
+</tr>
+<tr>
+<td>🔬 연구</td>
+<td>반복 실험 중 <strong>혼자 동떨어진 결과</strong> 골라내기</td>
+</tr>
+<tr>
+<td>🌊 환경·수질</td>
+<td>측정 지점 수치가 <strong>평소 범위를 벗어났는지</strong> 매일 체크</td>
+</tr>
+<tr>
+<td>🏥 보건·임상</td>
+<td>검사 수치의 <strong>비정상 패턴</strong> 스크리닝</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<h3 id="_5">공통점 — <strong>"평소"를 아는 사람이 "평소와 다름"을 찾는 일.</strong></h3>
+<p>오늘 이 일을 에이전트에게 맡깁니다. 단, <strong>"평소와 다름"까지만.</strong> 그게 문제인지 아닌지는 여전히 여러분 몫입니다.</p>
+</blockquote>
+<hr />
+<h2 id="b">B · 이상을 찾는 두 가지 방법</h2>
+<p>오늘은 두 개의 다른 질문으로 이상을 찾습니다.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>방법 ① 값이 튀는 날</th>
+<th>방법 ② 예측이 빗나간 날</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>질문</td>
+<td><em>"무리에서 혼자 떨어진 날은?"</em></td>
+<td><em>"모델 예상과 어긋난 날은?"</em></td>
+</tr>
+<tr>
+<td>도구</td>
+<td><strong>Isolation Forest</strong></td>
+<td>어제 만든 <strong>회귀 모델의 잔차</strong></td>
+</tr>
+<tr>
+<td>보는 것</td>
+<td>여러 변수의 <strong>조합</strong>이 유별난 날</td>
+<td>조건 대비 <strong>결과</strong>가 유별난 날</td>
+</tr>
+<tr>
+<td>Day 2와 차이</td>
+<td>그땐 한 변수씩(IQR) — 오늘은 <strong>여러 변수를 같이</strong></td>
+<td>예측 모델이 있어야 가능 — <strong>어제 만든 게 오늘 도구가 됩니다</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 <strong>Isolation Forest</strong> = 무리에서 혼자 떨어져 있는 정도를 점수로 매기는 방법. <strong>계산식은 클로드가 압니다.</strong> 우리는 결과만 판단합니다.<br />
+비슷한 도구로 LOF라는 것도 있습니다 — 심화에서 비교해 봅니다.</p>
+</blockquote>
+<hr />
+<h2 id="c-day-2">C · 찾은 다음이 진짜다 — Day 2의 원칙, 다시</h2>
+<p>Day 2에 배운 표를 그대로 다시 씁니다. 오늘 실전입니다.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>이런 것</th>
+<th>어떻게</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>측정 오류</strong></td>
+<td>물리적으로 <strong>불가능한 값</strong></td>
+<td>고치거나 뺀다</td>
+</tr>
+<tr>
+<td><strong>진짜 이상</strong></td>
+<td>실제로 벌어진 <strong>사건의 흔적</strong></td>
+<td><strong>남긴다. 오히려 발견이다</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<h3 id="_6"><strong>이 구분은 클로드가 못 합니다.</strong></h3>
+<p>클로드는 "통계적으로 튄다"까지 압니다. <strong>"이 값이 물리적으로 가능한가"</strong> 는 그 분야를 아는 사람이 판단합니다.<br />
+오늘 실습에서 <strong>두 종류가 다 나옵니다.</strong> 하나는 남기고, 하나는 의심하게 될 겁니다.</p>
+</blockquote>
+<hr />
+<h2 id="d">D · 오늘의 프롬프트 패턴 — "이유까지"</h2>
+<table>
+<thead>
+<tr>
+<th>패턴</th>
+<th>프롬프트 뼈대</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>① 탐지 + 이유</td>
+<td><em>"이상한 날을 찾아줘. </em><em>왜 이상한지 이유도 같이</em><em> 설명해줘."</em></td>
+</tr>
+<tr>
+<td>② 맥락 연결</td>
+<td><em>"이상으로 찍힌 날들을 </em><em>날씨·휴일과 연결</em><em>해서 공통점을 찾아줘."</em></td>
+</tr>
+<tr>
+<td>③ 활용 번역</td>
+<td><em>"이 이상 신호를 </em><em>현업에서 어떻게 쓸지</em><em> 비전문가 언어로 설명해줘."</em></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 <strong>"찾아줘"로 끝내지 마세요.</strong> 날짜 목록만 받으면 아무것도 못 합니다. 항상 <strong>이유와 맥락까지</strong> 시키는 게 오늘 배우는 지시법입니다.</p>
+</blockquote>
+<hr />
+<h1 id="2-3">2부 · 실습 「폭우 온 날의 이상 신호」 (3시간)</h1>
+<blockquote>
+<p><strong>기본 과제는 실습 1~5까지.</strong> 여기까지 하시면 오늘 목표 달성입니다.<br />
+늦으신 분은 <strong>실습 1~3까지만 해도</strong> 오늘의 핵심은 가져가신 겁니다.</p>
+</blockquote>
+<hr />
+<h2 id="1">실습 1 · 어제 질문의 답 — 가장 크게 빗나간 날</h2>
+<pre><code>data/raw/day.csv 로 어제처럼 cnt 를 예측하는 모델을 만들어줘.
+(casual 과 registered 는 빼고)
+
+그리고 731일 전체에 대해 예측값과 실제값의 차이를 계산해서,
+가장 크게 빗나간 날 10개를
+날짜 · 실제 · 예측 · 차이 표로 보여줘.
+
+원본은 수정하지 마.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — 1위는 <strong>2012-10-29.</strong> 예측은 4천 대 안팎인데 <strong>실제는 단 22대.</strong></p>
+<h3 id="_7">🔍 이제 여러분이 판단합니다</h3>
+<blockquote>
+<p><strong>2년 평균이 4,504대인데, 이 날은 22대입니다. 무슨 일일까요?</strong></p>
+</blockquote>
+<pre><code>□ 기록이 잘못됐다 (입력 오류)
+□ 시스템 점검으로 서비스를 껐다
+□ 이 날 도시에 무슨 일이 있었다
+</code></pre>
+<hr />
+<h2 id="2">실습 2 · 데이터가 기억하는 그 날 ⭐ <strong>오늘의 하이라이트</strong></h2>
+<p>날짜를 알았으니, 이제 물어봅니다.</p>
+<pre><code>2012년 10월 29일, 미국 워싱턴 D.C. 에 무슨 일이 있었어?
+이 날 자전거 대여가 하루 22건뿐이었던 것과 연결해서 설명해줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — <strong>허리케인 샌디.</strong> 미국 동부를 강타한 초대형 허리케인입니다.</p>
+<blockquote>
+<h3 id="_8">💡 <strong>여러분은 방금, 숫자만 보고 실제 사건을 역추적했습니다.</strong></h3>
+<p>이상탐지가 하는 일이 정확히 이겁니다 — <strong>기록 속에서 사건을 찾아내는 것.</strong><br />
+이 데이터는 실제 운영 기록 그대로입니다. 제가 손대지 않았습니다. 진짜 도시의 2년이 담겨 있고, 그 안에 허리케인도 담겨 있던 겁니다.</p>
+<p>실험 노트의 튀는 값 뒤에도 이런 "그 날의 사건"이 있습니다 — 장비 고장, 시약 교체, 정전.<br />
+<strong>값은 이유를 남깁니다. 찾는 법을 오늘 배우는 겁니다.</strong></p>
+</blockquote>
+<hr />
+<h2 id="3-731">실습 3 · 자동 감시 — 731일을 한 번에 훑기</h2>
+<p>방금은 한 날짜를 파고들었습니다. 이제 <strong>2년 전체를 자동으로</strong> 훑게 합니다.</p>
+<pre><code>day.csv 에서 평소와 다른 &quot;이상한 날&quot;들을
+Isolation Forest 로 찾아줘.
+
+- 온도·습도·풍속·날씨 등급·대여 수를 같이 볼 것
+- 전체의 5% 정도를 이상으로 잡아줘
+- 찾은 날들의 날짜와, 왜 이상한지 이유를 표로
+
+아직 아무것도 지우거나 고치지 마. 찾기만 해줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — <strong>약 37일</strong>이 나옵니다. (5% 기준. 설정에 따라 개수는 다를 수 있습니다 — 정상입니다.)</p>
+<h3 id="_9">이 날들의 공통점을 찾아봅니다</h3>
+<pre><code>이상으로 찍힌 날들의 날씨 등급(weathersit) 분포를
+전체 731일의 분포와 비교해서 보여줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — 2년 동안 악천후(등급 3)는 21일뿐인데, <strong>그 21일이 전부 이상 목록에 들어 있습니다.</strong></p>
+<blockquote>
+<p>💡 눈으로 731일을 훑었으면 하루 종일 걸릴 일입니다. <strong>에이전트는 한 번에 잡아냅니다.</strong></p>
+</blockquote>
+<hr />
+<h2 id="4">실습 4 · 그런데 휴일은? — 예상과 다른 결과 ⭐</h2>
+<p>날씨가 잡혔으니, 휴일도 잡혔을 것 같습니다. 먼저 예상해 보세요.</p>
+<blockquote>
+<p>🔍 <strong>휴일(공휴일)은 평일과 분명 다른 날입니다. 이상 목록에 많이 잡혔을까요?</strong></p>
+</blockquote>
+<pre><code>□ 당연히 많이 잡혔다
+□ 몇 개는 잡혔다
+□ 하나도 안 잡혔다
+</code></pre>
+<p><strong>확인해 봅니다</strong></p>
+<pre><code>이상으로 찍힌 날들 중에 휴일(holiday=1)이 며칠인지 세어줘.
+그리고 휴일의 대여 수 분포가 평소와 얼마나 다른지도 보여줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — <strong>0일.</strong> 휴일은 단 하루도 이상으로 잡히지 않았습니다.</p>
+<blockquote>
+<h3 id="_10">💡 <strong>"다르다"와 "이상하다"는 다릅니다.</strong></h3>
+<p>휴일의 대여량은 평일과 다르긴 해도 <strong>정상 범위 안</strong>에 있습니다. 무리에서 떨어진 게 아닙니다.<br />
+눈비는 대여량을 반토막 밑으로 꺾지만, 휴일은 그 정도가 아니라는 것 — <strong>직감과 데이터가 어긋난 지점</strong>이고, 이런 게 발견입니다.</p>
+<p>실무 번역 — <em>"이번 배치 값이 좀 다른데요?"</em> → <strong>"다른 건지, 이상한 건지"</strong> 부터 구분하는 사람이 됩니다.</p>
+</blockquote>
+<hr />
+<h2 id="5">실습 5 · 측정 오류를 잡아라 ⭐</h2>
+<p>이상 목록에는 사건만 있는 게 아닙니다. <strong>Day 2의 그 구분</strong>을 실전에서 씁니다.</p>
+<pre><code>이상으로 찍힌 날들 중에서, 값 자체가 물리적으로
+불가능해 보이는 날이 있는지 찾아줘.
+특히 습도(hum) 값을 잘 살펴봐줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — <strong>습도 0.0인 날</strong>이 하나 나옵니다 (2011-03-10).</p>
+<h3 id="_11">🔍 이제 여러분이 판단합니다</h3>
+<blockquote>
+<p><strong>습도 0% — 이 값, 믿어도 됩니까?</strong></p>
+</blockquote>
+<pre><code>□ 그날 정말 극도로 건조했다
+□ 측정 오류다 (기록 누락·센서 문제)
+□ 어느 쪽이든 상관없다
+</code></pre>
+<p><strong>자문을 구하되, 판단은 남기세요</strong></p>
+<pre><code>습도가 0.0으로 기록된 날이 있어. 물리적으로 가능한 값인지,
+측정 오류라면 이 행을 어떻게 처리하는 게 좋을지
+장단점과 함께 알려줘. 최종 판단은 내가 할게.
+</code></pre>
+<blockquote>
+<h3 id="_12">💡 <strong>같은 "이상치"인데 처리가 정반대입니다.</strong></h3>
+<p>허리케인 샌디(22대) — 진짜 사건. <strong>남깁니다. 오히려 발견입니다.</strong><br />
+습도 0% — 측정 오류 의심. <strong>고치거나 뺍니다.</strong><br />
+이 구분을 통계는 못 합니다. <strong>하늘에서 습도 0%가 안 나온다는 걸 아는 사람</strong>만 합니다. 그게 여러분 칸입니다.</p>
+</blockquote>
+<hr />
+<h2 id="6">실습 6 · 두 방법 겹쳐보기 — 교차 확인</h2>
+<p>방법 ①(값이 튄 날)과 방법 ②(예측이 빗나간 날)를 포개봅니다.</p>
+<pre><code>실습 1의 &quot;예측이 크게 빗나간 날 10개&quot;와
+실습 3의 &quot;이상한 날&quot; 목록이 겹치는 날짜를 찾아줘.
+
+겹치는 날과 한쪽에만 있는 날이 각각 뭘 의미하는지 설명해줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — 겹치는 날은 <strong>소수</strong>입니다. 그리고 그 안에 <strong>2012-10-29(샌디)</strong> 가 있습니다.</p>
+<h3 id="_13">🔍 이상한 게 하나 있습니다</h3>
+<blockquote>
+<p><strong>실습 4에서 "휴일은 이상하지 않다"고 했는데, 빗나간 날 목록에는 추수감사절(2011-11-24)이 상위에 있습니다. 모순인가요?</strong></p>
+</blockquote>
+<pre><code>□ 모순이다 — 둘 중 하나가 틀렸다
+□ 모순이 아니다 — 두 방법이 다른 걸 본다
+</code></pre>
+<blockquote>
+<h3 id="_14">💡 <strong>값의 이상과 패턴의 이상은 다릅니다.</strong></h3>
+<p>추수감사절의 대여량 자체는 정상 범위입니다(값은 안 이상함). 그런데 <strong>그날 조건(맑은 평일 패턴) 대비</strong>로는 훨씬 적었습니다(패턴은 이상함) — 모델이 휴일 효과를 덜 배운 거죠.<br />
+방법 ①은 <strong>값</strong>을, 방법 ②는 <strong>조건 대비 결과</strong>를 봅니다. 그래서 둘 다 쓰는 거고,<br />
+<strong>둘 다에 걸린 날(샌디)이 가장 강한 신호</strong>입니다.</p>
+</blockquote>
+<hr />
+<h2 id="_15">⚡ 심화 과제</h2>
+<h3 id="1-lof">심화 1 · 다른 감시자와 비교 — LOF</h3>
+<pre><code>같은 데이터를 LOF(Local Outlier Factor) 방법으로도 탐지해서,
+Isolation Forest 결과와 겹치는 날 / 서로 다른 날을 비교표로 보여줘.
+두 방법이 왜 다른 날을 고르는지도 설명해줘.
+</code></pre>
+<h3 id="2_1">심화 2 · 이상한 날 달력 만들기</h3>
+<pre><code>2년치 대여 수를 시간 순서 그래프로 그리고,
+이상으로 찍힌 날들을 빨간 점으로 표시해줘.
+outputs/day5/ 에 저장해줘. 한글 폰트 설정해줘.
+</code></pre>
+<blockquote>
+<p>💡 보고서에 넣으면 한눈에 설명되는 그림입니다. <em>"빨간 점이 전부 눈비 온 날입니다"</em> — 한 문장으로 끝나죠.</p>
+</blockquote>
+<h3 id="3_2">심화 3 · 채용 언어로 한 단락</h3>
+<pre><code>오늘 만든 이상탐지 과정을 채용 담당자가 읽을 한 단락으로 정리해줘.
+
+- 눈으로 하던 어떤 점검을 자동화했는지 (731일을 한 번에)
+- 탐지된 이상을 실제 사건(허리케인)과 측정 오류(습도 0%)로
+  구분해서 다르게 처리했다는 판단
+- 이 방식을 실무에서 어디에 쓸 수 있는지
+
+전문용어는 최소화하고, 판단 근거가 드러나게 써줘.
+outputs/day5/ 에 저장해줘.
+</code></pre>
+<blockquote>
+<p>💡 <strong>심화 3은 모든 분께 권합니다.</strong> "탐지했다"가 아니라 <strong>"구분해서 다르게 처리했다"</strong> 가 이 단락의 힘입니다.</p>
+</blockquote>
+<hr />
+<h1 id="_16">내 업무로 시켜보기</h1>
+<pre><code>내 업무에는 눈으로 이상값을 확인하는 일이 있어.
+[내 업무 설명 — 무엇을, 얼마나 자주 확인하는지]
+
+오늘 배운 두 가지 방법을 내 업무에 적용한다면
+
+1) &quot;값이 튀는 것 찾기&quot;로는 뭘 잡아낼 수 있을지
+2) &quot;예상과 어긋난 것 찾기&quot;로는 뭘 잡아낼 수 있을지
+3) 이 점검을 자동으로 해주는 지시문 초안 하나
+
+를 만들어줘.
+</code></pre>
+<blockquote>
+<p>⚠️ <strong>개인정보·기밀은 빼고</strong> 설명하세요. 데이터 파일 없이 말로만 설명해도 됩니다.</p>
+</blockquote>
+<hr />
+<h1 id="3-11-1">3부 · 공유와 1:1 상담 (1시간)</h1>
+<h2 id="1-notion">① Notion 갤러리에 올리기</h2>
+<pre><code>□ 이상한 날 목록 (또는 심화 2의 달력 그림)
+□ 오늘의 발견 한 줄 (샌디 or 휴일 0개 or 습도 0%를 추천합니다)
+</code></pre>
+<h2 id="2-11">② 내 도메인 데이터 1:1 상담 ⭐</h2>
+<p>지난 시간에 정한 후보 데이터를 <strong>강사와 함께 확정</strong>합니다. 상담에서 정할 것:</p>
+<pre><code>□ 이 데이터로 뭘 할 수 있나 — 예측(회귀)인가, 이상탐지인가, 둘 다인가
+□ 변수·크기·결측이 다음 시간 실습에 충분한가
+□ 개인정보·기밀 컬럼은 제거됐는가
+</code></pre>
+<blockquote>
+<p>💡 <strong>아직 못 정하셨어도 전혀 문제없습니다.</strong> 상담에서 같이 좁힙니다. 마땅한 게 없으면 강사가 추천 목록에서 골라드립니다.<br />
+상담 대기 중에는 심화 과제를 진행하세요.</p>
+</blockquote>
+<h2 id="3-1">③ 오늘의 1건</h2>
+<pre><code>Day5  오늘 시킨 것 / 된 것: ______________________________
+</code></pre>
+<ul>
+<li><em>"예측이 가장 크게 빗나간 날을 찾았더니 허리케인 샌디였다 — 숫자로 사건을 역추적했다"</em></li>
+<li><em>"휴일이 이상치로 하나도 안 잡혀서 놀랐다 — '다른 것'과 '이상한 것'이 다르다는 걸 배웠다"</em></li>
+<li><em>"습도 0%를 찾아냈다 — 통계가 아니라 상식으로 잡는 오류였다"</em></li>
+</ul>
+<hr />
+<h2 id="21">다음 시간 (21차시)</h2>
+<p>드디어 <strong>여러분 데이터</strong>입니다.<br />
+5일 동안 배운 워크플로우를, 오늘 상담에서 확정한 내 데이터에 처음부터 끝까지 돌립니다.</p>
+<blockquote>
+<p>🤔 <strong>미리 생각해 보세요</strong> — 여러분 업무 데이터에서 <strong>"이 값이 이상하면 큰일"</strong> 인 것 하나는 무엇인가요?</p>
+</blockquote>
+</main>
+<nav class="toc"><div class="toctitle">목차</div><div class="toc">
+<ul>
+<li><a href="#20-day-5">20차시 · Day 5</a><ul>
+<li><a href="#_1">이상탐지 — 「폭우 온 날의 이상 신호」</a></li>
+<li><a href="#_2">지난 시간 질문부터 회수합니다</a></li>
+<li><a href="#3">그림 3장 — 오늘의 버전</a></li>
+<li><a href="#_3">오늘 끝나면</a></li>
+<li><a href="#3_1">오늘 꼭 기억할 3가지</a></li>
+</ul>
+</li>
+<li><a href="#_4">시작하기</a></li>
+<li><a href="#1-1">1부 · 이론 (1시간)</a><ul>
+<li><a href="#a">A · 지금 눈으로 하고 계신 그 일</a><ul>
+<li><a href="#_5">공통점 — "평소"를 아는 사람이 "평소와 다름"을 찾는 일.</a></li>
+</ul>
+</li>
+<li><a href="#b">B · 이상을 찾는 두 가지 방법</a></li>
+<li><a href="#c-day-2">C · 찾은 다음이 진짜다 — Day 2의 원칙, 다시</a><ul>
+<li><a href="#_6">이 구분은 클로드가 못 합니다.</a></li>
+</ul>
+</li>
+<li><a href="#d">D · 오늘의 프롬프트 패턴 — "이유까지"</a></li>
+</ul>
+</li>
+<li><a href="#2-3">2부 · 실습 「폭우 온 날의 이상 신호」 (3시간)</a><ul>
+<li><a href="#1">실습 1 · 어제 질문의 답 — 가장 크게 빗나간 날</a><ul>
+<li><a href="#_7">🔍 이제 여러분이 판단합니다</a></li>
+</ul>
+</li>
+<li><a href="#2">실습 2 · 데이터가 기억하는 그 날 ⭐ 오늘의 하이라이트</a><ul>
+<li><a href="#_8">💡 여러분은 방금, 숫자만 보고 실제 사건을 역추적했습니다.</a></li>
+</ul>
+</li>
+<li><a href="#3-731">실습 3 · 자동 감시 — 731일을 한 번에 훑기</a><ul>
+<li><a href="#_9">이 날들의 공통점을 찾아봅니다</a></li>
+</ul>
+</li>
+<li><a href="#4">실습 4 · 그런데 휴일은? — 예상과 다른 결과 ⭐</a><ul>
+<li><a href="#_10">💡 "다르다"와 "이상하다"는 다릅니다.</a></li>
+</ul>
+</li>
+<li><a href="#5">실습 5 · 측정 오류를 잡아라 ⭐</a><ul>
+<li><a href="#_11">🔍 이제 여러분이 판단합니다</a></li>
+<li><a href="#_12">💡 같은 "이상치"인데 처리가 정반대입니다.</a></li>
+</ul>
+</li>
+<li><a href="#6">실습 6 · 두 방법 겹쳐보기 — 교차 확인</a><ul>
+<li><a href="#_13">🔍 이상한 게 하나 있습니다</a></li>
+<li><a href="#_14">💡 값의 이상과 패턴의 이상은 다릅니다.</a></li>
+</ul>
+</li>
+<li><a href="#_15">⚡ 심화 과제</a><ul>
+<li><a href="#1-lof">심화 1 · 다른 감시자와 비교 — LOF</a></li>
+<li><a href="#2_1">심화 2 · 이상한 날 달력 만들기</a></li>
+<li><a href="#3_2">심화 3 · 채용 언어로 한 단락</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_16">내 업무로 시켜보기</a></li>
+<li><a href="#3-11-1">3부 · 공유와 1:1 상담 (1시간)</a><ul>
+<li><a href="#1-notion">① Notion 갤러리에 올리기</a></li>
+<li><a href="#2-11">② 내 도메인 데이터 1:1 상담 ⭐</a></li>
+<li><a href="#3-1">③ 오늘의 1건</a></li>
+<li><a href="#21">다음 시간 (21차시)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+</div>
+<script>
+document.querySelectorAll('pre').forEach(function(pre){
+  var b=document.createElement('button');
+  b.className='copybtn'; b.textContent='복사';
+  b.onclick=function(){
+    var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+    navigator.clipboard.writeText(t).then(function(){
+      b.textContent='복사됨'; b.classList.add('done');
+      setTimeout(function(){b.textContent='복사'; b.classList.remove('done');},1400);
+    });
+  };
+  pre.appendChild(b);
+});
+var bar=document.getElementById('bar');
+window.addEventListener('scroll',function(){
+  var h=document.documentElement;
+  var p=h.scrollTop/((h.scrollHeight-h.clientHeight)||1)*100;
+  bar.style.width=p+'%';
+});
+</script>
+</body>
+</html>

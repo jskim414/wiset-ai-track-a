@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>19차시 · Day 4</title>
+<style>
+:root{
+  --bg:#ffffff; --fg:#1a1a2e; --muted:#5b6474; --line:#e3e6ec;
+  --accent:#4A90D9; --accent-soft:#eaf2fb;
+  --cta:#F5A623; --code-bg:#1a1a2e; --code-fg:#e8ecf4;
+  --ok:#1f8a4c; --ok-soft:#e8f6ee; --warn:#b3541e; --warn-soft:#fdf1e6;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font-family:"Pretendard","Pretendard Variable","Malgun Gothic","맑은 고딕",
+              -apple-system,"Segoe UI",system-ui,sans-serif;
+  font-size:19px; line-height:1.75; word-break:keep-all;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px;display:flex;gap:36px}
+main{flex:1;min-width:0;padding:48px 0 140px}
+h1,h2,h3{line-height:1.3;word-break:keep-all}
+h1{
+  font-size:2.15em;margin:2.4em 0 .5em;padding-bottom:.35em;
+  border-bottom:4px solid var(--accent);
+}
+h1:first-of-type{margin-top:.2em}
+h2{font-size:1.5em;margin:2em 0 .6em;color:#22304a}
+h3{font-size:1.16em;margin:1.6em 0 .4em;color:#33405c}
+p{margin:.85em 0}
+hr{border:0;border-top:1px solid var(--line);margin:2.6em 0}
+a{color:var(--accent)}
+strong{font-weight:700}
+ul,ol{padding-left:1.5em}
+li{margin:.35em 0}
+
+/* 인용 = 팁/강조 */
+blockquote{
+  margin:1.4em 0; padding:1em 1.3em;
+  background:var(--accent-soft); border-left:5px solid var(--accent);
+  border-radius:0 10px 10px 0; color:#233;
+}
+blockquote p{margin:.4em 0}
+blockquote h3{margin:.2em 0;font-size:1.25em;color:#123}
+
+/* 코드 */
+pre{
+  position:relative; background:var(--code-bg); color:var(--code-fg);
+  padding:1.15em 1.3em; border-radius:12px; overflow-x:auto;
+  font-size:1.02em; line-height:1.65; margin:1.1em 0;
+  box-shadow:0 2px 14px rgba(26,26,46,.16);
+}
+pre code{
+  font-family:"D2Coding","Cascadia Mono","Consolas","Malgun Gothic",monospace;
+  white-space:pre-wrap; word-break:break-word;
+}
+:not(pre)>code{
+  background:#f1f3f7; color:#1a2b45; padding:.15em .45em;
+  border-radius:6px; font-size:.94em;
+  font-family:"D2Coding","Consolas",monospace;
+}
+.copybtn{
+  position:absolute; top:9px; right:10px;
+  background:rgba(255,255,255,.13); color:#fff; border:1px solid rgba(255,255,255,.28);
+  border-radius:7px; padding:5px 12px; font-size:.72em; cursor:pointer;
+  font-family:inherit; letter-spacing:.02em;
+}
+.copybtn:hover{background:rgba(255,255,255,.26)}
+.copybtn.done{background:var(--ok);border-color:var(--ok)}
+
+/* 표 */
+table{border-collapse:collapse;width:100%;margin:1.3em 0;font-size:.97em}
+th,td{border:1px solid var(--line);padding:.6em .8em;text-align:left;vertical-align:top}
+th{background:#f5f7fa;font-weight:700}
+tr:nth-child(even) td{background:#fafbfd}
+
+/* 목차 */
+nav.toc{
+  width:250px;flex:0 0 250px;position:sticky;top:0;align-self:flex-start;
+  max-height:100vh;overflow-y:auto;padding:48px 0 60px;font-size:.86em;
+}
+nav.toc .toctitle{font-weight:700;color:var(--muted);letter-spacing:.06em;margin-bottom:.7em}
+nav.toc ul{list-style:none;padding-left:0;margin:0;border-left:2px solid var(--line)}
+nav.toc ul ul{padding-left:.85em;border:0}
+nav.toc li{margin:0}
+nav.toc a{display:block;padding:.34em .9em;color:var(--muted);text-decoration:none;border-radius:0 6px 6px 0}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+
+/* 진행 바 */
+#bar{position:fixed;top:0;left:0;height:4px;background:var(--cta);width:0;z-index:99}
+
+@media (max-width:1000px){
+  nav.toc{display:none}
+  body{font-size:17px}
+  .wrap{padding:0 18px}
+}
+@media print{
+  nav.toc,.copybtn,#bar{display:none}
+  body{font-size:11pt}
+  pre{background:#f4f5f8;color:#111;box-shadow:none;border:1px solid #ccc}
+  h1{page-break-before:always}
+  h1:first-of-type{page-break-before:avoid}
+}
+</style>
+<link rel="stylesheet" href="meta-redesign.css">
+</head>
+<body>
+<div id="bar"></div>
+<div class="wrap">
+<main>
+<h1 id="19-day-4">19차시 · Day 4</h1>
+<h2 id="_1">워크플로우 이식과 튜닝 — 「날씨로 자전거 수요를 예측하라」</h2>
+<blockquote>
+<p><strong>오늘 할 일 — 딱 하나</strong><br />
+<strong>펭귄으로 익힌 예측 워크플로우를, 오늘 처음 보는 자전거 데이터에 그대로 이식한다.</strong></p>
+</blockquote>
+<hr />
+<h2 id="_2">지난 시간, 펭귄은 끝났습니다</h2>
+<p>3일 동안 펭귄만 봤습니다. 열고, 정리하고, 예측까지 했습니다.<br />
+오늘부터는 <strong>완전히 다른 동네</strong>로 갑니다.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>지난주 <code>penguins.csv</code></th>
+<th><strong>오늘 <code>day.csv</code></strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>무엇</td>
+<td>남극 펭귄 344마리</td>
+<td><strong>미국 워싱턴 D.C. 공공자전거 2년치(731일)</strong></td>
+</tr>
+<tr>
+<td>한 줄</td>
+<td>펭귄 한 마리</td>
+<td><strong>하루</strong></td>
+</tr>
+<tr>
+<td>맞히는 것</td>
+<td>체중</td>
+<td><strong>그날의 대여 건수</strong></td>
+</tr>
+<tr>
+<td>도메인</td>
+<td>생물 관측</td>
+<td><strong>도시·날씨·생활</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<h3 id="_3">데이터는 완전히 다른데, <strong>오늘 하는 일의 순서는 지난주와 똑같습니다.</strong></h3>
+<p>그게 오늘의 진짜 수업입니다. <em>"내 분야 데이터도 똑같이 되겠구나"</em> 를 확인하러 갑니다.</p>
+</blockquote>
+<p>그리고 지난 시간 마지막 질문 — <em>"복잡한 모델이 항상 더 좋을까요?"</em><br />
+펭귄에서는 <strong>가장 단순한 모델이 이겼습니다.</strong> 오늘 새 데이터에서 <strong>다시 물어봅니다.</strong></p>
+<hr />
+<h2 id="3">그림 3장 — 오늘의 버전</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>① 3자 분업</strong></td>
+<td>새 데이터에 맞추는 건 클로드가, <strong>"이 워크플로우를 어디에 또 쓸까" 판단은 여러분이</strong></td>
+</tr>
+<tr>
+<td><strong>② 에이전트</strong></td>
+<td>같은 에이전트에게 <strong>낯선 도메인의 일</strong>을 시킵니다 — 직원이 부서를 옮겨도 일 잘하는지 봅니다</td>
+</tr>
+<tr>
+<td><strong>③ IPO</strong></td>
+<td><strong>I</strong> 새 데이터(day.csv) → <strong>P</strong> 지난주와 같은 워크플로우 + 튜닝 → <strong>O</strong> 예측 모델 + 성능 비교표</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_4">오늘 끝나면</h2>
+<ul>
+<li>처음 보는 데이터를 받아도 <strong>무엇부터 할지 순서가 나옵니다</strong></li>
+<li><strong>"너무 완벽한 결과"를 의심</strong>할 수 있습니다</li>
+<li>모델 3종 비교를 <strong>새 데이터에서 한 번 더</strong> 해봅니다 — 이번엔 결과가 다릅니다</li>
+<li>모델의 다이얼(하이퍼파라미터) 조정을 <strong>클로드에게 통째로 위임</strong>합니다</li>
+<li>다음 시간에 쓸 <strong>내 도메인 데이터</strong>를 확정합니다</li>
+</ul>
+<h2 id="3_1">오늘 꼭 기억할 3가지</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔁</td>
+<td><strong>워크플로우는 재산이다</strong> — 데이터가 바뀌어도 순서는 같다</td>
+</tr>
+<tr>
+<td>🚨</td>
+<td><strong>너무 완벽한 결과는 축하보다 의심</strong> — R² 1.0은 대부분 사고다</td>
+</tr>
+<tr>
+<td>🎛</td>
+<td><strong>튜닝은 마지막 1%다</strong> — 좋은 데이터와 변수가 먼저다</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="_5">시작하기</h1>
+<p>바탕화면 → <code>claude-lab</code> → <code>my-project</code> → 주소창 <code>powershell</code> → <code>claude</code></p>
+<pre><code>outputs/ 안에 day4 폴더를 만들고,
+data/raw/ 에 어떤 파일이 있는지 보여줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — <code>day.csv</code> 가 보입니다. 오늘은 이걸 씁니다.</p>
+<blockquote>
+<p>🔧 <strong><code>day.csv</code> 가 없으면</strong> — USB의 <code>_백업</code> 폴더에서 <code>day.csv</code> 를 탐색기로 <code>data\raw\</code> 에 복사하세요. 🙋 안 되시면 손 드세요.</p>
+<p>💡 <strong>사용량 3원칙</strong> — 이론 시간엔 화면만 보기 · 에러는 다시 던지지 말고 원인부터 묻기 · 차시 끝나면 🧹 <code>/clear</code>.<br />
+걸리면 옆자리와 한 화면으로 보시면 됩니다. <strong>전혀 문제없습니다.</strong></p>
+</blockquote>
+<hr />
+<h1 id="1-1">1부 · 이론 (1시간)</h1>
+<hr />
+<h2 id="a">A · 새 데이터를 만나면 — 순서는 항상 같다</h2>
+<p>지난 3일을 한 줄로 압축하면 이 순서입니다.</p>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>하는 일</th>
+<th>배운 날</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>① <strong>열어본다</strong></td>
+<td>행·열·컬럼·자료형</td>
+<td>Day 1</td>
+</tr>
+<tr>
+<td>② <strong>점검한다</strong></td>
+<td>결측·숨은 값·이상한 값</td>
+<td>Day 2</td>
+</tr>
+<tr>
+<td>③ <strong>탐색한다</strong></td>
+<td>분포·관계를 그림으로</td>
+<td>Day 1·2</td>
+</tr>
+<tr>
+<td>④ <strong>예측한다</strong></td>
+<td>모델 비교·선택</td>
+<td>Day 3</td>
+</tr>
+<tr>
+<td>⑤ <strong>해석한다</strong></td>
+<td>이 결과가 좋은가, 말이 되는가</td>
+<td>매일</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<h3 id="_6">이 순서표가 지난주에 여러분이 번 <strong>재산</strong>입니다.</h3>
+<p>오늘은 이 표를 자전거 데이터에 <strong>복사해서 붙여넣습니다.</strong> 다음 시간엔 <strong>여러분 데이터</strong>에 붙여넣습니다.</p>
+</blockquote>
+<hr />
+<h2 id="b-dc">B · 오늘의 데이터 — 워싱턴 D.C. 공공자전거</h2>
+<p>미국 워싱턴 D.C.의 공공자전거(우리로 치면 따릉이) <strong>실제 운영 기록</strong>입니다.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>기간</td>
+<td>2011~2012년, <strong>731일</strong> (하루 한 줄)</td>
+</tr>
+<tr>
+<td>내용</td>
+<td>그날의 <strong>날씨·달력 정보</strong> + <strong>자전거 대여 건수</strong></td>
+</tr>
+<tr>
+<td>질문</td>
+<td><em>"날씨와 요일을 알면, 오늘 몇 대나 빌려갈지 맞힐 수 있나?"</em></td>
+</tr>
+</tbody>
+</table>
+<p><strong>컬럼은 세 묶음입니다</strong></p>
+<table>
+<thead>
+<tr>
+<th>묶음</th>
+<th>컬럼</th>
+<th>뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>📅 달력</td>
+<td><code>season</code> <code>yr</code> <code>mnth</code> <code>holiday</code> <code>weekday</code> <code>workingday</code></td>
+<td>계절·연도·월·휴일·요일·근무일</td>
+</tr>
+<tr>
+<td>🌦 날씨</td>
+<td><code>weathersit</code> <code>temp</code> <code>atemp</code> <code>hum</code> <code>windspeed</code></td>
+<td>날씨 등급(1맑음·2흐림·3악천후)·온도·체감온도·습도·풍속</td>
+</tr>
+<tr>
+<td>🚲 대여</td>
+<td><code>casual</code> <code>registered</code> <code>cnt</code></td>
+<td>비회원·회원·<strong>합계(오늘 맞힐 값)</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 왜 자전거냐면 — <strong>날씨가 행동에 미치는 영향을 상식으로 검증할 수 있기 때문</strong>입니다.<br />
+<em>"비 오면 덜 타겠지"</em> — 여러분이 이미 전문가입니다. 펭귄 때와 같은 이유입니다.</p>
+</blockquote>
+<hr />
+<h2 id="c">C · 모델의 다이얼 — 하이퍼파라미터</h2>
+<p>세탁기를 생각해 보세요. <strong>같은 세탁기라도 코스·수온·탈수 세기를 어떻게 맞추느냐</strong>에 따라 결과가 다릅니다.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>세탁기</th>
+<th>모델</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>기계</td>
+<td>드럼세탁기</td>
+<td>랜덤포레스트</td>
+</tr>
+<tr>
+<td><strong>다이얼</strong></td>
+<td>코스·수온·탈수</td>
+<td><strong>나무 개수·깊이 등</strong></td>
+</tr>
+<tr>
+<td>지금까지</td>
+<td>표준 코스만 씀</td>
+<td><strong>공장 기본값</strong>으로 씀</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>지난주 모델들은 전부 <strong>공장 기본값</strong>이었습니다. 오늘은 <strong>데이터에 맞게 다이얼을 조정</strong>합니다.</li>
+<li>다이얼 이름을 외울 필요 없습니다. <strong>조합을 전부 돌려보고 제일 좋은 걸 고르는 일 — 그걸 클로드에게 시킵니다.</strong></li>
+</ul>
+<blockquote>
+<p>💡 오늘 쓸 위임 프롬프트는 결국 이 한 줄입니다.<br />
+<em>"이 데이터에 맞는 최적 모델과 파라미터를 찾아서 비교표로 보여줘."</em></p>
+</blockquote>
+<hr />
+<h2 id="d">D · 한 번 나눈 점수는 운일 수 있다 — 교차검증</h2>
+<p>지난 시간 심화에서 잠깐 나온 이야기입니다.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>문제</td>
+<td>데이터를 <strong>한 번만</strong> 나눠서 평가하면, 어떻게 나뉘었느냐에 따라 점수가 <strong>운</strong>으로 달라진다</td>
+</tr>
+<tr>
+<td>해법</td>
+<td><strong>5번 다르게 나눠서 5번 평가하고 평균</strong>을 본다 — 이게 교차검증</td>
+</tr>
+<tr>
+<td>오늘</td>
+<td>튜닝할 때 클로드가 <strong>알아서 이 방식으로</strong> 다이얼을 고릅니다</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 <strong>계산은 클로드가 합니다.</strong> 여러분은 <em>"평균 점수와 편차"</em> 만 보면 됩니다.</p>
+</blockquote>
+<hr />
+<h1 id="2-3">2부 · 실습 「날씨로 자전거 수요를 예측하라」 (3시간)</h1>
+<blockquote>
+<p><strong>기본 과제는 실습 1~5까지.</strong> 여기까지 하시면 오늘 목표 달성입니다.<br />
+늦으신 분은 <strong>실습 1~3까지만 해도</strong> 오늘의 핵심(이식 + 함정)은 다 가져가신 겁니다.</p>
+</blockquote>
+<hr />
+<h2 id="1">실습 1 · 처음 보는 데이터 훑어보기</h2>
+<p>지난주 Day 1에 한 것과 <strong>같은 첫 수순</strong>입니다. 순서표 ①번.</p>
+<pre><code>data/raw/day.csv 를 불러와서
+
+1) 행과 열이 몇 개인지
+2) 컬럼 이름과 자료형을 표로
+3) 각 컬럼의 결측치 개수
+
+정리해서 보여줘. 원본은 수정하지 마.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — <strong>731행 × 16열 · 결측 0개</strong></p>
+<h3 id="_7">🔍 이제 여러분이 판단합니다</h3>
+<blockquote>
+<p><strong><code>temp</code>(온도) 값들을 보세요. 25도, 18도가 아니라 <code>0.34</code> 같은 소수입니다. 왜일까요?</strong></p>
+</blockquote>
+<pre><code>□ 측정 오류다
+□ 화씨 같은 다른 단위다
+□ 일부러 변환해 둔 값이다
+</code></pre>
+<p><strong>클로드에게 물어보세요</strong></p>
+<pre><code>temp, atemp, hum, windspeed 가 전부 0~1 사이 소수야.
+왜 그런지, 실제 온도로는 어떻게 되돌릴 수 있는지 설명해줘.
+</code></pre>
+<blockquote>
+<p>💡 <strong>정규화</strong> — 값을 0~1 사이로 눌러 담은 것입니다. 실무 데이터에서 아주 흔합니다.<br />
+결측이 0개라고 안심했는데 <strong>값의 모양이 낯선 것</strong> — 이것도 점검 대상입니다. 데이터 설명서(코드북)를 확인하는 습관이 여기서 나옵니다.</p>
+</blockquote>
+<hr />
+<h2 id="2">실습 2 · 상식으로 관계 확인하기</h2>
+<p>모델을 만들기 전에, <strong>상식과 데이터가 맞는지</strong> 눈으로 봅니다. 순서표 ③번.</p>
+<pre><code>1) 온도(temp)와 대여 수(cnt)의 산점도 (계절별 색 구분)
+2) 날씨 등급(weathersit)별 대여 수 boxplot
+
+두 장을 outputs/day4/ 에 저장하고,
+각각 뭘 보여주는지 한 줄씩 설명해줘. 한글 폰트 설정해줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — 더울수록 많이 타고, 악천후(3)에서 뚝 떨어집니다. 상식과 일치.</p>
+<h3 id="_8">🔍 이제 여러분이 판단합니다</h3>
+<blockquote>
+<p><strong>맑음(1)→흐림(2)의 차이와, 흐림(2)→악천후(3)의 차이 — 어느 쪽이 큽니까?</strong></p>
+</blockquote>
+<pre><code>□ 비슷하다
+□ 맑음→흐림이 더 크다
+□ 흐림→악천후가 훨씬 크다
+</code></pre>
+<blockquote>
+<p>💡 흐림까지는 사람들이 그냥 탑니다. <strong>눈비가 오는 순간 반토막 밑으로</strong> 떨어집니다.<br />
+<em>"날씨가 나쁘면 좀 줄겠지"</em> 가 아니라 <strong>어디서 급락하는지</strong>까지 봐야 실무 언어가 됩니다.</p>
+</blockquote>
+<hr />
+<h2 id="3_2">실습 3 · 완벽한 모델의 함정 ⭐ <strong>오늘의 하이라이트</strong></h2>
+<p>이제 예측을 시킵니다. 일단 <strong>컬럼을 전부 넣어서</strong> 시켜보겠습니다.</p>
+<pre><code>day.csv 로 cnt(대여 수)를 예측하는 선형회귀 모델을 만들어줘.
+
+- 번호(instant)와 날짜(dteday)만 빼고, 나머지 컬럼은 전부 입력으로 써
+- 다른 컬럼을 네 판단으로 더 빼지는 마
+- 8:2로 나눠서 R², RMSE를 보여줘
+- 원본은 수정하지 마
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — <strong>R² = 1.000, RMSE ≈ 0.</strong> 오차가 없습니다.</p>
+<h3 id="_9">🔍 이제 여러분이 판단합니다</h3>
+<blockquote>
+<p><strong>R² 1.000 — 축하할 일인가요?</strong></p>
+</blockquote>
+<pre><code>□ 완벽한 모델을 만들었다
+□ 데이터가 좋아서 그렇다
+□ 뭔가 잘못됐다
+</code></pre>
+<p><strong>의심스러우면 물어봅니다</strong></p>
+<pre><code>R²가 1.0이 나왔어. 너무 완벽해서 오히려 의심스러워.
+casual 과 registered 가 어떤 컬럼인지,
+cnt 와 무슨 관계인지 확인해서 알려줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — <strong>casual + registered = cnt.</strong> 731일 전부, 단 하루도 빠짐없이.</p>
+<blockquote>
+<h3 id="_10">💡 <strong>정답이 입력에 섞여 있었습니다. 한마디로 커닝입니다.</strong></h3>
+<p>"비회원 수 + 회원 수 = 총 대여 수"니까, 그 둘을 알려주면 <strong>답을 보고 답을 맞힌 셈</strong>입니다.<br />
+내일 대여량을 진짜로 예측해야 하는 날엔 — 내일의 casual을 미리 알 방법이 없죠.</p>
+<p><strong>실무에서 가장 자주 나는 사고입니다.</strong> 합계와 부분이 같이 든 표, 결과로부터 계산된 컬럼…<br />
+그래서 이렇게 기억하세요 — <strong>결과가 너무 좋으면, 실력이 아니라 사고일 확률이 높다.</strong></p>
+</blockquote>
+<hr />
+<h2 id="4-3">실습 4 · 제대로 다시 — 3종 비교, 두 번째 라운드</h2>
+<p>커닝 컬럼을 빼고, 지난주 그 비교를 새 데이터에서 반복합니다.</p>
+<pre><code>casual 과 registered 는 빼고, 아래 3가지 모델로
+cnt 를 예측해서 성능을 비교표로 만들어줘.
+
+1) 선형회귀 (Linear Regression)
+2) 랜덤포레스트 (Random Forest)
+3) XGBoost
+
+- 같은 학습/검증 데이터를 쓸 것 (8:2)
+- RMSE, MAE, R²를 한 표에 나란히
+- 어느 모델이 나은지, 왜 그런지 설명해줘
+
+비교표는 outputs/day4/ 에도 저장해줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — 3행짜리 비교표. <strong>이번엔 랜덤포레스트·XGBoost가 앞섭니다.</strong></p>
+<h3 id="_11">🔍 지난주와 순위가 뒤집혔습니다</h3>
+<blockquote>
+<p><strong>펭귄에서는 선형회귀가 이겼는데, 왜 여기서는 질까요?</strong></p>
+</blockquote>
+<pre><code>□ 지난주 결과가 틀렸던 거다
+□ 데이터가 2배 넘게 커졌다
+□ 관계가 직선이 아니다 (계절·날씨가 얽혀 있다)
+</code></pre>
+<p><strong>클로드에게 물어보세요</strong></p>
+<pre><code>펭귄 데이터에서는 선형회귀가 이겼는데
+이 데이터에서는 랜덤포레스트가 더 좋아.
+두 데이터의 어떤 차이 때문인지 설명해줘.
+</code></pre>
+<blockquote>
+<h3 id="_12">💡 <strong>지난 시간 질문의 최종 답이 이겁니다.</strong></h3>
+<p>복잡한 모델이 항상 좋은 것도, 단순한 모델이 항상 좋은 것도 아닙니다. <strong>데이터마다 다릅니다.</strong><br />
+그래서 <strong>매번 비교해 보는 것</strong>이고 — 비교하는 워크플로우만 있으면 어느 쪽이든 상관없습니다.</p>
+</blockquote>
+<hr />
+<h2 id="5">실습 5 · 다이얼 맞추기 — 튜닝 위임</h2>
+<p>가장 좋았던 모델의 다이얼을 클로드에게 맡깁니다.</p>
+<pre><code>방금 가장 성능이 좋았던 모델의 하이퍼파라미터를
+교차검증 방식으로 튜닝해줘.
+
+- 어떤 조합을 몇 개나 탐색했는지
+- 최종 선택된 파라미터
+- 튜닝 전/후 성능을 한 표로 비교
+
+결과 표를 outputs/day4/ 에 저장해줘.
+탐색이 오래 걸리면 범위를 작게 잡아도 돼.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — 튜닝 전/후 비교표. <strong>개선 폭이 아주 작아도 정상입니다.</strong></p>
+<blockquote>
+<p>🔧 너무 오래 걸리면 → <code>ESC</code> → <code>탐색 범위를 작게 줄여서 다시 해줘.</code></p>
+</blockquote>
+<h3 id="_13">🔍 이제 여러분이 판단합니다</h3>
+<blockquote>
+<p><strong>몇 % 좋아졌나요? 생각보다 작지 않습니까?</strong></p>
+</blockquote>
+<pre><code>□ 튜닝이 잘못됐다
+□ 기본값이 이미 꽤 좋았다
+□ 더 큰 개선은 다른 데서 온다
+</code></pre>
+<blockquote>
+<h3 id="1_1">💡 <strong>튜닝은 마법이 아니라 마지막 1%입니다.</strong></h3>
+<p>성능을 바꾸는 힘의 순서 — <strong>① 좋은 데이터·변수 &gt; ② 모델 선택 &gt; ③ 튜닝.</strong><br />
+실습 3에서 커닝 컬럼 하나가 결과를 통째로 바꿨던 것과 비교해 보세요. 뭐가 중요한지 보입니다.</p>
+</blockquote>
+<hr />
+<h2 id="6-2">실습 6 · 무엇이 중요했나 — 이상한 2위</h2>
+<pre><code>튜닝한 모델이 어떤 변수를 중요하게 봤는지 순서대로 보여주고,
+막대그래프로 그려서 outputs/day4/ 에 저장해줘.
+</code></pre>
+<p><strong>✅ 성공 신호</strong> — <strong>temp(온도)가 1위.</strong> 상식과 맞습니다. 그런데—</p>
+<h3 id="_14">🔍 이제 여러분이 판단합니다</h3>
+<blockquote>
+<p><strong><code>yr</code>(연도)가 상위권에 있습니다. "몇 년도냐"가 왜 대여량 예측에 중요할까요?</strong></p>
+</blockquote>
+<pre><code>□ 뭔가 잘못 계산됐다
+□ 2012년에 이용자가 크게 늘었다 (서비스가 성장 중)
+□ 연도는 빼는 게 맞다
+</code></pre>
+<p><strong>판단을 위임하지 말고, 자문을 구하세요</strong></p>
+<pre><code>yr(연도)가 변수 중요도 상위에 있어. 왜 그런지 데이터로 확인해주고,
+이걸 입력에 넣는 게 맞는지 장단점과 함께 알려줘.
+최종 판단은 내가 할게.
+</code></pre>
+<blockquote>
+<p>💡 <strong>"시간이 지나며 저절로 자라는 요인"</strong> — 서비스 성장, 장비 노후, 고객 증가.<br />
+여러분 업무 데이터에도 거의 반드시 있습니다. 모델이 그걸 성실하게 학습해 버린다는 걸 오늘 봤습니다.</p>
+</blockquote>
+<hr />
+<h2 id="_15">⚡ 심화 과제</h2>
+<h3 id="1_2">심화 1 · 에이전트에게 실험을 반복시키기</h3>
+<blockquote>
+<p>사람이 실험 하나하나를 지시하는 게 아니라, <strong>실험 계획째로 위임</strong>해 봅니다.</p>
+</blockquote>
+<pre><code>입력 변수 조합을 3가지로 바꿔가며
+(예: 날씨만 / 달력만 / 전부) 각각 모델을 만들어서
+성능을 비교하는 실험을 해줘.
+
+실험 로그를 표로 정리해서 outputs/day4/ 에 저장하고,
+어떤 조합이 왜 좋았는지 결론을 내줘.
+</code></pre>
+<blockquote>
+<p>💡 이게 커리큘럼에 있는 <strong>"에이전트가 스스로 반복 실험"</strong> 입니다. 시키는 단위가 '작업'에서 '실험 계획'으로 커졌습니다.</p>
+</blockquote>
+<h3 id="2_1">심화 2 · 점수는 얼마나 흔들리나</h3>
+<pre><code>가장 좋았던 모델을 5-fold 교차검증으로 평가해서,
+5번의 점수를 각각 보여주고 평균과 편차를 알려줘.
+편차가 큰 편인지 작은 편인지도 판단해줘.
+</code></pre>
+<h3 id="3_3">심화 3 · 채용 언어로 한 단락</h3>
+<pre><code>오늘 한 작업을 채용 담당자가 읽을 한 단락으로 정리해줘.
+
+- 다른 도메인에서 만든 분석 워크플로우를 새 데이터에 이식했다는 것
+- R² 1.0이 나왔을 때 의심하고 원인(정답 유출)을 찾아냈다는 것
+- 모델 비교와 튜닝으로 무엇을 확인했는지
+
+전문용어는 최소화하고, 판단 근거가 드러나게 써줘.
+outputs/day4/ 에 저장해줘.
+</code></pre>
+<blockquote>
+<p>💡 <strong>심화 3은 모든 분께 권합니다.</strong> 특히 <strong>"R² 1.0을 의심했다"</strong> 는 면접에서 아주 강한 소재입니다.<br />
+<em>"AI를 잘 쓰는 사람"</em> 이 아니라 <strong>"AI 결과를 검증할 줄 아는 사람"</strong> 의 증거거든요.</p>
+</blockquote>
+<hr />
+<h1 id="_16">내 업무로 시켜보기</h1>
+<blockquote>
+<p>펭귄 → 자전거 이식을 오늘 해냈습니다. 다음 이식지는 <strong>여러분 업무</strong>입니다.</p>
+</blockquote>
+<pre><code>오늘 나는 같은 분석 워크플로우(점검→탐색→예측→해석)를
+새 데이터에 그대로 옮겨 쓰는 걸 해봤어.
+
+내 업무 데이터는 이런 거야: [내 업무 데이터 설명]
+
+1) 이 워크플로우를 내 데이터에 적용한다면
+   단계별로 어떤 지시문을 쓰면 될지 초안 4개를 만들어줘
+2) 내 데이터에서 &quot;정답이 입력에 섞이는&quot; 커닝 컬럼이
+   생길 만한 게 있을지도 짚어줘
+</code></pre>
+<blockquote>
+<p>⚠️ <strong>개인정보·기밀은 빼고</strong> 설명하세요. 데이터 파일 없이 말로만 설명해도 됩니다.</p>
+</blockquote>
+<hr />
+<h1 id="3-1">3부 · 공유와 회고 (1시간)</h1>
+<h2 id="1-notion">① Notion 갤러리에 올리기</h2>
+<pre><code>□ 모델 3종 비교표 (또는 튜닝 전후 표)
+□ 그래프 1장
+□ 오늘의 발견 한 줄 (R² 1.0 사건을 추천합니다)
+</code></pre>
+<h2 id="2_2">② 다음 시간 준비 — 내 도메인 데이터 확정</h2>
+<p>다음다음 시간(21차시)부터 <strong>여러분 데이터로 이 워크플로우를 돌립니다.</strong> 오늘 정할 것:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1순위</td>
+<td>본인의 실험·측정·업무 데이터 (⚠️ <strong>개인정보·기밀 제외한 사본</strong>)</td>
+</tr>
+<tr>
+<td>2순위</td>
+<td>내 분야의 공개 데이터 (수질·산불·보건지표·공공데이터포털 등)</td>
+</tr>
+<tr>
+<td>모르겠으면</td>
+<td>다음 시간 1:1 상담에서 강사와 함께 좁힙니다 — <strong>후보만 1~2개</strong> 생각해 오세요</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 파일까지 미리 받아오시면 다음 시간이 편합니다. 추천 목록은 강사가 안내합니다.</p>
+</blockquote>
+<h2 id="3-1_1">③ 오늘의 1건</h2>
+<pre><code>Day4  오늘 시킨 것 / 된 것: ______________________________
+</code></pre>
+<ul>
+<li><em>"R²가 1.0이 나와서 의심했더니 정답이 입력에 섞여 있었다 — 커닝을 잡아냈다"</em></li>
+<li><em>"펭귄 워크플로우를 자전거 데이터에 그대로 붙여넣었더니 그대로 돌아갔다"</em></li>
+<li><em>"튜닝을 통째로 시켰는데 생각보다 안 좋아져서, 뭐가 성능을 정하는지 순서를 알게 됐다"</em></li>
+</ul>
+<hr />
+<h2 id="20">다음 시간 (20차시)</h2>
+<p>같은 자전거 데이터에서 <strong>"평소와 다른 날"을 자동으로 찾아냅니다.</strong><br />
+눈으로 하던 이상값 체크를 에이전트에게 맡기는 날입니다.</p>
+<blockquote>
+<p>🤔 <strong>미리 생각해 보세요</strong> — 오늘 만든 모델이 <strong>가장 크게 빗나간 날</strong>은 언제였을까요?<br />
+그 날, 워싱턴 D.C.에는 무슨 일이 있었을까요?</p>
+</blockquote>
+</main>
+<nav class="toc"><div class="toctitle">목차</div><div class="toc">
+<ul>
+<li><a href="#19-day-4">19차시 · Day 4</a><ul>
+<li><a href="#_1">워크플로우 이식과 튜닝 — 「날씨로 자전거 수요를 예측하라」</a></li>
+<li><a href="#_2">지난 시간, 펭귄은 끝났습니다</a><ul>
+<li><a href="#_3">데이터는 완전히 다른데, 오늘 하는 일의 순서는 지난주와 똑같습니다.</a></li>
+</ul>
+</li>
+<li><a href="#3">그림 3장 — 오늘의 버전</a></li>
+<li><a href="#_4">오늘 끝나면</a></li>
+<li><a href="#3_1">오늘 꼭 기억할 3가지</a></li>
+</ul>
+</li>
+<li><a href="#_5">시작하기</a></li>
+<li><a href="#1-1">1부 · 이론 (1시간)</a><ul>
+<li><a href="#a">A · 새 데이터를 만나면 — 순서는 항상 같다</a><ul>
+<li><a href="#_6">이 순서표가 지난주에 여러분이 번 재산입니다.</a></li>
+</ul>
+</li>
+<li><a href="#b-dc">B · 오늘의 데이터 — 워싱턴 D.C. 공공자전거</a></li>
+<li><a href="#c">C · 모델의 다이얼 — 하이퍼파라미터</a></li>
+<li><a href="#d">D · 한 번 나눈 점수는 운일 수 있다 — 교차검증</a></li>
+</ul>
+</li>
+<li><a href="#2-3">2부 · 실습 「날씨로 자전거 수요를 예측하라」 (3시간)</a><ul>
+<li><a href="#1">실습 1 · 처음 보는 데이터 훑어보기</a><ul>
+<li><a href="#_7">🔍 이제 여러분이 판단합니다</a></li>
+</ul>
+</li>
+<li><a href="#2">실습 2 · 상식으로 관계 확인하기</a><ul>
+<li><a href="#_8">🔍 이제 여러분이 판단합니다</a></li>
+</ul>
+</li>
+<li><a href="#3_2">실습 3 · 완벽한 모델의 함정 ⭐ 오늘의 하이라이트</a><ul>
+<li><a href="#_9">🔍 이제 여러분이 판단합니다</a></li>
+<li><a href="#_10">💡 정답이 입력에 섞여 있었습니다. 한마디로 커닝입니다.</a></li>
+</ul>
+</li>
+<li><a href="#4-3">실습 4 · 제대로 다시 — 3종 비교, 두 번째 라운드</a><ul>
+<li><a href="#_11">🔍 지난주와 순위가 뒤집혔습니다</a></li>
+<li><a href="#_12">💡 지난 시간 질문의 최종 답이 이겁니다.</a></li>
+</ul>
+</li>
+<li><a href="#5">실습 5 · 다이얼 맞추기 — 튜닝 위임</a><ul>
+<li><a href="#_13">🔍 이제 여러분이 판단합니다</a></li>
+<li><a href="#1_1">💡 튜닝은 마법이 아니라 마지막 1%입니다.</a></li>
+</ul>
+</li>
+<li><a href="#6-2">실습 6 · 무엇이 중요했나 — 이상한 2위</a><ul>
+<li><a href="#_14">🔍 이제 여러분이 판단합니다</a></li>
+</ul>
+</li>
+<li><a href="#_15">⚡ 심화 과제</a><ul>
+<li><a href="#1_2">심화 1 · 에이전트에게 실험을 반복시키기</a></li>
+<li><a href="#2_1">심화 2 · 점수는 얼마나 흔들리나</a></li>
+<li><a href="#3_3">심화 3 · 채용 언어로 한 단락</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#_16">내 업무로 시켜보기</a></li>
+<li><a href="#3-1">3부 · 공유와 회고 (1시간)</a><ul>
+<li><a href="#1-notion">① Notion 갤러리에 올리기</a></li>
+<li><a href="#2_2">② 다음 시간 준비 — 내 도메인 데이터 확정</a></li>
+<li><a href="#3-1_1">③ 오늘의 1건</a></li>
+<li><a href="#20">다음 시간 (20차시)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+</div>
+<script>
+document.querySelectorAll('pre').forEach(function(pre){
+  var b=document.createElement('button');
+  b.className='copybtn'; b.textContent='복사';
+  b.onclick=function(){
+    var t=pre.querySelector('code')?pre.querySelector('code').innerText:pre.innerText;
+    navigator.clipboard.writeText(t).then(function(){
+      b.textContent='복사됨'; b.classList.add('done');
+      setTimeout(function(){b.textContent='복사'; b.classList.remove('done');},1400);
+    });
+  };
+  pre.appendChild(b);
+});
+var bar=document.getElementById('bar');
+window.addEventListener('scroll',function(){
+  var h=document.documentElement;
+  var p=h.scrollTop/((h.scrollHeight-h.clientHeight)||1)*100;
+  bar.style.width=p+'%';
+});
+</script>
+</body>
+</html>

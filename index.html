@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="AI 활용 응용교육 Track A 16~24차시 강의 교안 링크 페이지">
+<title>AI 활용 응용교육 - Track A 강의 교안페이지</title>
+<link rel="stylesheet" href="meta-redesign.css">
+<style>
+  .index-page {
+    min-height: 100vh;
+    background: var(--bg);
+  }
+
+  .index-shell {
+    width: min(1180px, calc(100% - 80px));
+    margin: 0 auto;
+    padding: 80px 0 104px;
+  }
+
+  .index-hero {
+    max-width: 820px;
+    margin: 0 0 72px;
+  }
+
+  .index-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    margin: 0 0 18px;
+    padding: 6px 13px;
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .01em;
+  }
+
+  .index-hero .index-title {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 500;
+    line-height: 1.16;
+  }
+
+  .index-intro {
+    max-width: 600px;
+    margin: 22px 0 0;
+    color: var(--muted);
+    font-size: 18px;
+    line-height: 1.55;
+  }
+
+  .lecture-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .lecture-card {
+    display: flex;
+    min-height: 232px;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 28px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: var(--bg);
+    color: var(--fg);
+    text-decoration: none;
+  }
+
+  .lecture-card:hover,
+  .lecture-card:focus-visible {
+    color: var(--fg);
+  }
+
+  .lecture-number {
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .01em;
+  }
+
+  .lecture-number strong {
+    color: var(--ink-deep);
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -.04em;
+  }
+
+  .lecture-card h2 {
+    margin: 22px 0 auto;
+    color: var(--ink-deep);
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.32;
+  }
+
+  .lecture-cta {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    min-height: 40px;
+    margin-top: 28px;
+    padding: 9px 16px;
+    border-radius: 100px;
+    background: var(--ink-deep);
+    color: var(--bg);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .lecture-cta::after {
+    content: "→";
+    margin-left: 8px;
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  .index-footer {
+    margin-top: 56px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  @media (max-width: 1023px) {
+    .lecture-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 640px) {
+    .index-shell { width: min(100% - 40px, 1180px); padding: 48px 0 72px; }
+    .index-hero { margin-bottom: 44px; }
+    .index-intro { font-size: 16px; }
+    .lecture-grid { grid-template-columns: 1fr; gap: 14px; }
+    .lecture-card { min-height: 198px; padding: 24px; border-radius: 16px; }
+    .lecture-card h2 { font-size: 20px; }
+    .index-footer { margin-top: 40px; }
+  }
+</style>
+</head>
+<body class="index-page">
+<main class="index-shell">
+  <header class="index-hero">
+    <p class="index-eyebrow">16~24차시 · Track A</p>
+    <h1 class="index-title">AI 활용 응용교육 - Track A 강의 교안페이지</h1>
+    <p class="index-intro">차시를 선택하면 해당 강의 교안으로 이동합니다.</p>
+  </header>
+
+  <nav class="lecture-grid" aria-label="차시별 강의 교안">
+    <a class="lecture-card" href="16-lecture-material.html">
+      <span class="lecture-number"><strong>16</strong> Day 1</span>
+      <h2>클로드 코드 첫 만남 + 펭귄 데이터 분석</h2>
+      <span class="lecture-cta">교안 보기</span>
+    </a>
+    <a class="lecture-card" href="17-lecture-material.html">
+      <span class="lecture-number"><strong>17</strong> Day 2</span>
+      <h2>전처리와 시각화 — 「숨겨진 패턴을 찾아라」</h2>
+      <span class="lecture-cta">교안 보기</span>
+    </a>
+    <a class="lecture-card" href="18-lecture-material.html">
+      <span class="lecture-number"><strong>18</strong> Day 3</span>
+      <h2>회귀 모델 — 「부리만 보고 체중을 맞혀라」</h2>
+      <span class="lecture-cta">교안 보기</span>
+    </a>
+    <a class="lecture-card" href="19-lecture-material.html">
+      <span class="lecture-number"><strong>19</strong> Day 4</span>
+      <h2>워크플로우 이식과 튜닝 — 「날씨로 자전거 수요를 예측하라」</h2>
+      <span class="lecture-cta">교안 보기</span>
+    </a>
+    <a class="lecture-card" href="20-lecture-material.html">
+      <span class="lecture-number"><strong>20</strong> Day 5</span>
+      <h2>이상탐지 — 「폭우 온 날의 이상 신호」</h2>
+      <span class="lecture-cta">교안 보기</span>
+    </a>
+    <a class="lecture-card" href="21-lecture-material.html">
+      <span class="lecture-number"><strong>21</strong> Day 6</span>
+      <h2>실전 프로젝트 v1 — 「내 프로젝트 첫 결과」</h2>
+      <span class="lecture-cta">교안 보기</span>
+    </a>
+    <a class="lecture-card" href="22-lecture-material.html">
+      <span class="lecture-number"><strong>22</strong> Day 7</span>
+      <h2>Notion 포트폴리오 — 「채용 담당자에게 30초 안에 보여주기」</h2>
+      <span class="lecture-cta">교안 보기</span>
+    </a>
+    <a class="lecture-card" href="23-lecture-material.html">
+      <span class="lecture-number"><strong>23</strong> Day 8</span>
+      <h2>GitHub · 발표자료 — 「링크 하나로 증명하기」</h2>
+      <span class="lecture-cta">교안 보기</span>
+    </a>
+    <a class="lecture-card" href="24-lecture-material.html">
+      <span class="lecture-number"><strong>24</strong> Day 9</span>
+      <h2>그룹 발표회 · 수료 — 「9일의 기록을 5분에 담다」</h2>
+      <span class="lecture-cta">교안 보기</span>
+    </a>
+  </nav>
+
+  <footer class="index-footer">상상력집단 · WISET AI 역량강화 Track A · 2026.08</footer>
+</main>
+</body>
+</html>
